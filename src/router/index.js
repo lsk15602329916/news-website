@@ -1,12 +1,17 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Home from '../views/Home.vue'
+import NewsList from '../views/NewsList.vue'
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
-  }
+    component: NewsList,
+  },
+  {
+    path: '/:tag',
+    name: 'NewsList',
+    component: NewsList,
+  },
 ]
 
 const router = createRouter({
