@@ -1,10 +1,222 @@
 <template>
-  <div>
+  <div id="bg">
+    <div class="display-box">
+      <div class="banner">
+        <div class="figure">
+          <div class="banner-img"></div>
+          <div class="shadow" />
+        </div>
+        <div class="title">
+          <h1>News Today</h1>
+          <p>时间</p>
+        </div>
+      </div>
+      <div class="container">
+        <div class="nav-box">
+          <NewsNavigator
+            v-for="(item, i) in newsItem.slice(0, 8)"
+            :news="item"
+            @click="selectNewsType(item)"
+          />
+        </div>
+        <div class="news-box">
+          <router-view />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import NewsNavigator from "./NewsNavigator.vue";
+import NewsList from "./NewsList.vue";
+
 export default {
-  name: 'Home'
+  name: "Home",
+  components: { NewsNavigator, NewsList },
+  data() {
+    return {
+      newsItem: [
+        { text: "推荐", active: true, icon: "all.png", tag: "__all__" },
+        { text: "热点", active: false, icon: "hot.png", tag: "news_hot" },
+        {
+          text: "社会",
+          active: false,
+          icon: "society.png",
+          tag: "news_society",
+        },
+        {
+          text: "娱乐",
+          active: false,
+          icon: "entertainment.png",
+          tag: "news_entertainment",
+        },
+        { text: "科技", active: false, icon: "tech.png", tag: "news_tech" },
+        {
+          text: "军事",
+          active: false,
+          icon: "military.png",
+          tag: "news_military",
+        },
+        { text: "体育", active: false, icon: "sports.png", tag: "news_sports" },
+        { text: "汽车", active: false, icon: "car.png", tag: "news_car" },
+        {
+          text: "财经",
+          active: false,
+          icon: "finance.png",
+          tag: "news_finance",
+        },
+        { text: "国际", active: false, icon: "world.png", tag: "news_world" },
+        {
+          text: "时尚",
+          active: false,
+          icon: "fashion.png",
+          tag: "news_fashion",
+        },
+        { text: "旅游", active: false, icon: "travel.png", tag: "news_travel" },
+        {
+          text: "探索",
+          active: false,
+          icon: "discovery.png",
+          tag: "news_discovery",
+        },
+        { text: "育儿", active: false, icon: "baby.png", tag: "news_baby" },
+        {
+          text: "养生",
+          active: false,
+          icon: "regimen.png",
+          tag: "news_regimen",
+        },
+        { text: "故事", active: false, icon: "story.png", tag: "news_story" },
+        { text: "美文", active: false, icon: "essay.png", tag: "news_essay" },
+        { text: "游戏", active: false, icon: "game.png", tag: "news_game" },
+        {
+          text: "历史",
+          active: false,
+          icon: "history.png",
+          tag: "news_history",
+        },
+        { text: "美食", active: false, icon: "food.png", tag: "news_food" },
+      ],
+    };
+  },
+  methods: {
+    selectNewsType(item) {
+      this.newsItem.forEach((item) => {
+        item.active = false;
+      });
+      item.active = !item.active;
+      this.$router.push({ name: "NewsList", params: { tag: item.tag } });
+    },
+  },
 };
 </script>
+
+<style scoped>
+/* 背景 */
+#bg {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  background: rgb(255, 228, 249);
+  background: linear-gradient(
+    -45deg,
+    rgba(255, 228, 249, 0.8) 0%,
+    rgba(205, 217, 252, 0.8) 100%
+  );
+}
+
+.display-box {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.banner {
+  width: 100%;
+  height: 25vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.figure {
+  width: 25vh;
+  height: 25vh;
+  position: relative;
+}
+.banner-img {
+  width: 25vh;
+  height: 25vh;
+  position: absolute;
+  left: 0px;
+  /* display: flex; */
+  background-image: url("../assets/news-bg-day.png");
+  background-size: contain;
+  border: transparent;
+  animation: updown 2s linear infinite;
+}
+@keyframes updown {
+  0%,
+  100% {
+    margin-top: 0px;
+  }
+  50% {
+    margin-top: -1rem;
+  }
+}
+.shadow {
+  height: 1.8vh;
+  width: 10vh;
+  background-color: rgb(184, 183, 183);
+  border-radius: 100%;
+  position: absolute;
+  bottom: 0.5vh;
+  left: 50%;
+  animation: scaling 2s infinite;
+}
+@keyframes scaling {
+  0%,
+  100% {
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    transform: translateX(-50%) scale(0.8);
+  }
+}
+.title {
+  color: rgb(100, 126, 243);
+  font-weight: 500;
+}
+
+.container {
+  width: 1100px;
+  min-height: 75vh;
+  padding: 10px 10px;
+  background: rgb(255, 255, 255);
+  background: rgb(255, 255, 255);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.8) 0%,
+    rgba(255, 255, 255, 0.4) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+  border-radius: 30px 30px 0 0;
+  filter: blur();
+}
+.nav-box {
+  width: 180px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+}
+.news-box {
+  margin-top: 20px;
+  width: 1000px;
+}
+</style>
