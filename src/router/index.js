@@ -2,14 +2,33 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import NewsList from '../views/NewsList.vue'
 
-const routes = [{
-        path: '/',
-        component: NewsList,
+import NewsDetails from '@/views/NewsDetails';
+
+const HomeChildren = [{
+        path: '',
+        redirect: '/home/__all__'
     },
     {
-        path: '/:tag',
+        path: ':tag',
         name: 'NewsList',
         component: NewsList,
+    },
+]
+
+const routes = [{
+        path: '/',
+        redirect: '/home'
+    },
+    {
+        path: '/home',
+        mame: 'Home',
+        component: Home,
+        children: HomeChildren
+    },
+    {
+        path: '/details',
+        name: 'NewsDetails',
+        component: NewsDetails,
     },
 ]
 

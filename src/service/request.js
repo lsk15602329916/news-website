@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const BASE_URL = ''
+const BASE_URL = 'https://qcx6h7.api.cloudendpoint.cn'
 const TIME_OUT = 60000
 export default function request(config) {
   const instance = axios.create({

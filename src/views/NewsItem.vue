@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="content" @click="open">
     <div class="newsText">
       <h2>{{ item.title }}</h2>
       <p>{{ item.abstract }}</p>
@@ -12,12 +12,18 @@
 </template>
 
 <script>
+import Utils from '@/utils';
 export default {
   name: "newsItem",
   props: ["item"],
   data() {
     return {};
   },
+  methods: {
+    open() {
+      Utils.openTag('/details', {})
+    }
+  }
 };
 </script>
 
