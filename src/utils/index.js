@@ -11,12 +11,11 @@ const update = function (key, value) {
   });
 }
 
-const openTag = function(url, opt) {
+const openTag = function(name, opt) {
   const r = router.resolve({
-    path: url,
-    query: opt
+    name: name,
+    params: opt
   })
-  console.log(r);
   window.open(r.href, '_blank')
 }
 
