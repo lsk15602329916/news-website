@@ -21,7 +21,15 @@ export default {
   },
   methods: {
     open() {
-      Utils.openTag('/details', {})
+      const { item_id, group_id } = this.item
+      console.log(this.item);
+      Utils.openTag(
+        `NewsDetails`, 
+        {
+          item_id: item_id,
+          group_id: group_id
+        }
+      )
     }
   }
 };
