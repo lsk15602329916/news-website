@@ -1,26 +1,59 @@
 <template>
-  <v-container>
+  <v-container ref="win">
     <v-row>
       <v-col cols="2">
       </v-col>
-      <v-col cols="8">
+      <v-col cols="8" v-show="newsDetails.data?.content">
         <div v-html="newsDetails.data?.content"></div>
         <v-divider class="my-5"></v-divider>
-        <p class="font-weight-bold my-2">精彩评论</p>
+        <!-- <p class="font-weight-bold my-2">精彩评论</p> -->
+        <v-item-group class="d-flex" mandatory>
+          <v-item v-slot="{ isSelected, toggle }">
+            <v-card
+              :color="isSelected || isFirstShow ? 'orange' : ''"
+              class="d-flex align-center px-2"
+              flat
+              dark
+              @click="changeComment(toggle, 0)"
+            >
+              <v-scroll-y-transition>
+                <div
+                  class="font-weight-bold my-2"
+                >
+                  精彩评论
+                </div>
+              </v-scroll-y-transition>
+            </v-card>
+          </v-item>
+          <v-divider vertical class="mx-1"></v-divider>
+          <v-item v-slot="{ isSelected, toggle }">
+            <v-card
+              :color="isSelected ? 'orange' : ''"
+              class="d-flex align-center px-2"
+              flat
+              dark
+              @click="changeComment(toggle, 1)"
+            >
+              <v-scroll-y-transition>
+                <div
+                  class="font-weight-bold my-2"
+                >
+                  其他评论
+                </div>
+              </v-scroll-y-transition>
+            </v-card>
+          </v-item>
+        </v-item-group>
         <div>
-          <div class="d-flex my-3">
-            <textarea :disabled="!$store.state.user.name" :placeholder="$store.state.user.name ? '' : '请先登录'" class="flex-grow-1 text-area pa-1" rows="5"></textarea>
-            <v-overlay contained v-model="overlay"></v-overlay>
-            <v-btn
-              size="small"
-              color="blue-grey"
-              :disabled="!$store.state.user.name"
-              class="align-self-end ml-3 btn"
-            >发送</v-btn>
-          </div>
+          <text-input
+            class="my-3"
+            @update-comment="updateComment"
+          />
           <comment-item
             v-for="item in newsComments.data?.comments"
+            @update-fav="updateFav($event, item)"
             :key="item.id"
+            @update-com="updateComment"
             :comment="item"
           />
           <v-btn v-if="newsComments.data?.has_more" block>
@@ -31,7 +64,7 @@
         <p class="font-weight-bold my-2">热门推荐</p>
         <div>
           <news-item
-            v-for="item in news.data"
+            v-for="item in news"
             :key="item.item_id"
             :news="item"
           />
@@ -46,57 +79,100 @@
 
 <script>
 import { useRoute } from "vue-router";
-import { getNewsDetails, getNewsComments, getNews } from "@/service/api";
+import { useStore } from 'vuex';
+import { getNewsDetails, getNewsComments, getNews, getComments } from "@/service/api";
 import newsItem from "@/components/ch-cpns/newsItem";
 import commentItem from "@/components/ch-cpns/commentItem";
+import textInput from '@/components/ch-cpns/commentItem/textInput';
 import { ref } from '@vue/reactivity';
+import { onMounted } from '@vue/runtime-core';
+import Utils from '@/utils';
 export default {
   components: {
     newsItem,
     commentItem,
+    textInput
   },
   setup(props) {
     const route = useRoute();
+    const store = useStore()
     let newsDetails = ref({})
     let newsComments = ref([])
     let overlay = ref(true)
     let news = ref([])
+    let isFirstShow = ref(true)
+    const win = ref(null)
     
     const _getNewsDetails = async () => {
       newsDetails.value = await getNewsDetails(route.params.item_id);
     }
     
-    const getComments = async () => {
+    const _getNewsComments = async () => {
       newsComments.value = await getNewsComments({
         item_id: route.params.item_id
       })
     }
+    const _getComments = async () => {
+      newsComments.value = await getComments({
+        item_id: route.params.item_id,
+        user_id: store.state.user.id
+      })
+    }
+
+    const updateComment = async (o) => {
+      await _getComments()
+    }
+
+    const changeComment = async (toggle, i) => {
+      if(isFirstShow.value) isFirstShow.value = false
+      toggle()
+      if(i) {
+        await _getComments()
+      } else {
+        await _getNewsComments()
+      }
+    }
 
     const _getNews = async () => {
-      news.value = await getNews('__all__')
+      let newsList = await getNews('__all__')
+      news.value.push(...newsList.data)
     }
+
+    const updateFav = (k, item) => {
+      item.isFav = Boolean(k)
+      item.favCount += (k ? 1 : -1)
+    }
+
+    onMounted(() => {
+      const scrollFn = (e) => {
+        const target = e.target.scrollingElement
+        const toBottom = (target.scrollTop + target.clientHeight + 50) > target.scrollHeight
+        if(toBottom) {
+          _getNews()
+        }
+      }
+
+      window.addEventListener('scroll', Utils.debounce(scrollFn))
+    })
     
     _getNewsDetails()
-    getComments()
+    _getNewsComments()
     _getNews()
     return {
       newsDetails,
       newsComments,
       news,
-      overlay
+      overlay,
+      isFirstShow,
+      changeComment,
+      win,
+      updateFav,
+      updateComment
     };
   }
 };
 </script>
 
 <style scoped>
-  .text-area {
-    background: rgb(228, 228, 228);
-    border: 3px solid gray;
-    border-radius: 5px;
-  }
-
-  .btn {
-    color: white;
-  }
+  
 </style>

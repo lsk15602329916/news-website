@@ -11,7 +11,7 @@ module.exports = {
       // 配置跨域
       '/toutiao': {
         target: 'https://m.toutiao.com/',
-        ws: true,
+        // ws: true,
         changeOrigin: true,
         pathRewrite: {
           '^/toutiao': ''

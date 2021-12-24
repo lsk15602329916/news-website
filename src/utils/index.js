@@ -19,7 +19,36 @@ const openTag = function(name, opt) {
   window.open(r.href, '_blank')
 }
 
+const showSuccessAlert = function(text) {
+  update('alertInfo', {
+    text,
+    type: 'success'
+  })
+}
+
+const showErrorAlert = function(text) {
+  update('alertInfo', {
+    text,
+    type: 'error'
+  })
+}
+
+const debounce = function(fn, time = 200) {
+  var timer = null
+
+  return function() {
+    if(timer) clearTimeout(timer)
+
+    timer = setTimeout(() => {
+      fn.apply(this, arguments)
+    }, time)
+  }
+}
+
 export default {
   update,
-  openTag
+  openTag,
+  debounce,
+  showSuccessAlert,
+  showErrorAlert
 }

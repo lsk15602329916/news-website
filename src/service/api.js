@@ -25,3 +25,32 @@ export async function getNewsComments(params) {
     params
   })
 }
+
+export async function getComments(params) {
+  return request({
+    url: OPT.GETCOMMENTS,
+    params
+  })
+}
+
+export async function comment(data) {
+  return request({
+    url: OPT.COMMENT,
+    method: 'POST',
+    data,
+    headers: {
+      'content-type': 'application/json'
+    }
+  })
+}
+
+export async function favComment(data) {
+  return request({
+    url: OPT.FAVCOMMENT,
+    method: 'POST',
+    data,
+    headers: {
+      'content-type': 'application/json'
+    }
+  })
+}

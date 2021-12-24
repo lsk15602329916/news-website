@@ -1,3 +1,6 @@
 export const GETNEWS = '/getNews'
 export const GETNEWSDETAILS = '/getNewsDetails'
 export const GETNEWSCOMMENTS = '/getNewsComments'
+export const GETCOMMENTS = '/getComments'
+export const COMMENT = '/comment'
+export const FAVCOMMENT = '/favComment'

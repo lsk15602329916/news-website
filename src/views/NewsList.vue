@@ -7,6 +7,7 @@
 <script>
 import axios from "axios";
 import newsItem from "./NewsItem.vue";
+import Utils from '@/utils';
 axios.defaults.baseURL = "/toutiao";
 
 export default {
@@ -26,6 +27,7 @@ export default {
   watch: {
     $route() {
       console.log("route改变了", this, this.$route.params.tag);
+      Utils.update('loading', true)
       axios
         .get("list/", {
           params: {
@@ -45,10 +47,13 @@ export default {
         })
         .catch((err) => {
           console.log(err);
-        });
+        }).finally(() => {
+          Utils.update('loading', false)
+        })
     },
   },
   created: function () {
+    Utils.update('loading', true)
     axios
       .get("list/", {
         params: {
@@ -68,7 +73,9 @@ export default {
       })
       .catch((err) => {
         console.log(err);
-      });
+      }).finally(() => {
+        Utils.update('loading', false)
+      })
   },
 };
 </script>

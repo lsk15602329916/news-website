@@ -1,14 +1,21 @@
 <template>
   <v-app>
     <router-view></router-view>
+    <loading />
+    <alert />
   </v-app>
 </template>
 
 <script>
 // import Home from "./views/Home.vue";
+import loading from '@/components/ch-cpns/loading';
+import alert from '@/components/ch-cpns/alert';
 export default {
   name: "App",
-  // components: { Home },
+  components: { loading, alert },
+  setup() {
+    
+  }
 };
 </script>
 
