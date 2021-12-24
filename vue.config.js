@@ -1,3 +1,6 @@
+// const path = require("path")
+// const resolve = dir => path.join(_dirname, dir)
+
 module.exports = {
   pluginOptions: {
     vuetify: {
@@ -16,7 +19,5 @@ module.exports = {
         pathRewrite: {
           '^/toutiao': ''
         }
-      },
     }
-  }
 }

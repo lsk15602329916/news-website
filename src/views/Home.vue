@@ -1,6 +1,9 @@
 <template>
   <div id="bg">
     <div class="display-box">
+      <div class="header">
+        <LoginDialog></LoginDialog>
+      </div>
       <div class="banner">
         <div class="figure">
           <div class="banner-img"></div>
@@ -30,10 +33,11 @@
 <script>
 import NewsNavigator from "./NewsNavigator.vue";
 import NewsList from "./NewsList.vue";
+import LoginDialog from '../components/loginDialog.vue'
 
 export default {
   name: "Home",
-  components: { NewsNavigator, NewsList },
+  components: { NewsNavigator, NewsList, LoginDialog},
   data() {
     return {
       newsItem: [
@@ -135,6 +139,12 @@ export default {
   align-items: center;
 }
 
+.header {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  padding: 10px 10px 0 0;
+}
 .banner {
   width: 100%;
   height: 25vh;
