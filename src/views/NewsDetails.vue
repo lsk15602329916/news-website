@@ -4,7 +4,11 @@
       <v-col cols="2">
       </v-col>
       <v-col cols="8">
-        <div v-html="newsDetails.data?.content"></div>
+        <h1 v-html="newsDetails.data?.title" class="title-style"></h1>
+        <div class="father">
+          <span class="son" v-html="newsTime  +  '&nbsp' + '&nbsp' + '&nbsp'+ '&nbsp'+ '&nbsp'+ ' 来源：' + newsDetails.data?.source" > </span>
+        </div>
+        <div v-html="newsDetails.data?.content" class="test"></div>
         <v-divider class="my-5"></v-divider>
         <p class="font-weight-bold my-2">精彩评论</p>
         <div>
@@ -61,11 +65,29 @@ export default {
     let newsComments = ref([])
     let overlay = ref(true)
     let news = ref([])
-    
+    let newsTime = ref('')
     const _getNewsDetails = async () => {
       newsDetails.value = await getNewsDetails(route.params.item_id);
-    }
-    
+      console.log(newsDetails.value.data?.detail_source)
+      console.log(newsDetails.value.data?.publish_time)
+      let time = new Date(parseInt(newsDetails.value.data?.publish_time) * 1000)
+      console.log(time)
+      let year = time.getFullYear()
+      let month = time.getMonth() + 1
+      let date = time.getDate()
+      let hours = time.getHours()
+      let minute = time.getMinutes()
+      let second = time.getSeconds()
+
+      if (month < 10) { month = '0' + month }
+      if (date < 10) { date = '0' + date }
+      if (hours < 10) { hours = '0' + hours }
+      if (minute < 10) { minute = '0' + minute }
+      if (second < 10) { second = '0' + second }
+      newsTime.value =  year + '年' + month + '月' + date + '日' + ' ' + hours + ':' + minute + ':' + second
+      console.log(newsTime)
+      }
+
     const getComments = async () => {
       newsComments.value = await getNewsComments({
         item_id: route.params.item_id
@@ -75,7 +97,9 @@ export default {
     const _getNews = async () => {
       news.value = await getNews('__all__')
     }
-    
+
+
+
     _getNewsDetails()
     getComments()
     _getNews()
@@ -83,9 +107,10 @@ export default {
       newsDetails,
       newsComments,
       news,
-      overlay
+      overlay,
+      newsTime
     };
-  }
+  },
 };
 </script>
 
@@ -99,4 +124,31 @@ export default {
   .btn {
     color: white;
   }
+  .title-style{
+    text-align: center;
+  }
+  .father{
+    /*position: relative;*/
+    /*background-color: blue;*/
+    width: 100%;
+    height: 30px;
+  }
+  .son {
+    display: inline-block;
+    width: 100%;
+    height: 20px;
+    /*position: absolute;*/
+    margin: 0 auto;
+    line-height: 15px;
+    text-align: center;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.92);
+    font-size: 14px;
+    color: grey;
+  }
+  /*img{*/
+  /*  display: inline-block;*/
+  /*  width: 100%;*/
+  /*  align-content: center;*/
+  /*}*/
 </style>
+
