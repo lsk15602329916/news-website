@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="2">
       </v-col>
-      <v-col cols="8">
+      <v-col cols="8" v-show="newsDetails.data">
         <h1 v-html="newsDetails.data?.title" class="title-style"></h1>
         <div class="father">
           <span class="son" v-html="newsTime  +  '&nbsp' + '&nbsp' + '&nbsp'+ '&nbsp'+ '&nbsp'+ ' 来源：' + newsDetails.data?.source" > </span>
@@ -104,6 +104,8 @@ export default {
     let newsComments = ref([])
     let overlay = ref(true)
     let news = ref([])
+    let isFirstShow = ref(true)
+    const win = ref(null)
     let newsTime = ref('')
     const _getNewsDetails = async () => {
       newsDetails.value = await getNewsDetails(route.params.item_id);
@@ -127,7 +129,7 @@ export default {
       console.log(newsTime)
       }
 
-    const getComments = async () => {
+    const _getNewsComments = async () => {
       newsComments.value = await getNewsComments({
         item_id: route.params.item_id
       })
