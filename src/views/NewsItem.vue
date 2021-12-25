@@ -22,7 +22,6 @@ export default {
   methods: {
     open() {
       const { item_id, group_id } = this.item
-      console.log(this.item);
       Utils.openTag(
         `NewsDetails`, 
         {

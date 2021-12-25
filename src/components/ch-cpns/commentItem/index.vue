@@ -81,7 +81,7 @@ export default {
   },
   emits: ['update-fav', 'update-com'],
   setup(props, context) {
-    console.log(props.comment);
+    // console.log(props.comment);
     let showReply = ref(false)
     let showTextArea = ref(false)
     let secondComment = ref(false)
@@ -98,8 +98,8 @@ export default {
       })
     }
 
-    const updateComment = () => {
-      context.emit('update-com')
+    const updateComment = (id) => {
+      context.emit('update-com', id)
     }
 
     const updateSecondFav = (k, item) => {

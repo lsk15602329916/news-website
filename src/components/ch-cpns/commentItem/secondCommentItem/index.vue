@@ -91,8 +91,8 @@ export default {
       show.value = !show.value
     }
 
-    const updateComment = async () => {
-      context.emit('update-com')
+    const updateComment = async (id) => {
+      context.emit('update-com', id)
     }
 
     return {

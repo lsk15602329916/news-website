@@ -60,7 +60,7 @@
             @update-com="updateComment"
             :comment="item"
           />
-          <v-btn v-if="newsComments.data?.has_more" block>
+          <v-btn v-if="newsComments.data?.has_more" @click="showAllComments(1)" block>
             <span class="grey--text">查看全部评论 >></span>
           </v-btn>
         </div>
@@ -79,6 +79,78 @@
       </v-col>
     </v-row>
   </v-container>
+  <v-navigation-drawer 
+    v-model="show"
+    temporary
+    disable-resize-watcher
+    width="400"
+    app
+  >
+    <v-list-item
+      class="px-2 nav-top"
+    >
+      <v-item-group class="d-flex" mandatory>
+        <v-item v-slot="{ isSelected, toggle }">
+          <v-card
+            :color="isSelected || isAllFirstShow ? 'orange' : ''"
+            class="d-flex align-center px-2"
+            flat
+            dark
+            @click="changeAllComment(toggle, 0)"
+          >
+            <v-scroll-y-transition>
+              <div
+                class="font-weight-bold my-2"
+              >
+                精彩评论
+              </div>
+            </v-scroll-y-transition>
+          </v-card>
+        </v-item>
+        <v-divider vertical class="mx-1"></v-divider>
+        <v-item v-slot="{ isSelected, toggle }">
+          <v-card
+            :color="isSelected ? 'orange' : ''"
+            class="d-flex align-center px-2"
+            flat
+            dark
+            @click="changeAllComment(toggle, 1)"
+          >
+            <v-scroll-y-transition>
+              <div
+                class="font-weight-bold my-2"
+              >
+                其他评论
+              </div>
+            </v-scroll-y-transition>
+          </v-card>
+        </v-item>
+      </v-item-group>
+      <v-spacer></v-spacer>
+      <v-btn
+        icon
+        flat
+        size="small"
+        @click.stop="show = false"
+      >
+        <v-icon>mdi-chevron-left</v-icon>
+      </v-btn>
+    </v-list-item>
+    <v-divider class="mt-16"></v-divider>
+    <comment-item
+      v-for="item in allComments.data?.comments"
+      :key="item.id"
+      :comment="item"
+      @update-fav="updateFav($event, item)"
+      @update-com="updateAllComment"
+    />
+    <v-btn
+      @click="showAllComments"
+      block
+    >
+      加载更多...
+    </v-btn>
+  </v-navigation-drawer>
 </template>
 
 <script>
@@ -102,17 +174,23 @@ export default {
     const store = useStore()
     let newsDetails = ref({})
     let newsComments = ref([])
+    let allComments = ref([])
+    let curAllComment = ref(0)
+    let curTTCommentCount = ref(0)
+    let curMYCommentCount = ref(0)
+    let allTTComments = ref([])
+    let allMYComments = ref([])
     let overlay = ref(true)
     let news = ref([])
     let isFirstShow = ref(true)
+    let isAllFirstShow = ref(true)
     const win = ref(null)
+    let show = ref(false)
     let newsTime = ref('')
+
     const _getNewsDetails = async () => {
       newsDetails.value = await getNewsDetails(route.params.item_id);
-      console.log(newsDetails.value.data?.detail_source)
-      console.log(newsDetails.value.data?.publish_time)
       let time = new Date(parseInt(newsDetails.value.data?.publish_time) * 1000)
-      console.log(time)
       let year = time.getFullYear()
       let month = time.getMonth() + 1
       let date = time.getDate()
@@ -129,29 +207,57 @@ export default {
       console.log(newsTime)
       }
 
-    const _getNewsComments = async () => {
-      newsComments.value = await getNewsComments({
-        item_id: route.params.item_id
-      })
-    }
-    const _getComments = async () => {
-      newsComments.value = await getComments({
+    const _getNewsComments = async (newsCom, offset, count) => {
+      let comments = await getNewsComments({
         item_id: route.params.item_id,
-        user_id: store.state.user.id
+        offset: offset?.value,
+        count
       })
+
+      if(!comments.data.has_more) {
+        Utils.showErrorAlert('没有更多了')
+        return;
+      }
+      try {
+        if(newsComments === newsCom) throw new Error()
+        newsCom.value.data.comments.push(...comments.data.comments)
+      } catch(e) {
+        newsCom.value = comments
+      }
+      offset && (offset.value += comments.data.comments.length)
+    }
+    const _getComments = async (newsCom, offset, count) => {
+      let comments = await getComments({
+        item_id: route.params.item_id,
+        user_id: store.state.user.id,
+        offset: offset?.value,
+        count
+      })
+
+      if(!comments.data.has_more) {
+        Utils.showErrorAlert('没有更多了')
+        return;
+      }
+      try {
+        if(newsComments === newsCom) throw new Error()
+        newsCom.value.data.comments.push(...comments.data.comments)
+      } catch(e) {
+        newsCom.value = comments
+      }
+      offset && (offset.value += comments.data.comments.length)
     }
 
-    const updateComment = async (o) => {
-      await _getComments()
+    const updateComment = async () => {
+      await _getComments(newsComments)
     }
 
     const changeComment = async (toggle, i) => {
       if(isFirstShow.value) isFirstShow.value = false
       toggle()
       if(i) {
-        await _getComments()
+        await _getComments(newsComments)
       } else {
-        await _getNewsComments()
+        await _getNewsComments(newsComments)
       }
     }
 
@@ -163,6 +269,53 @@ export default {
     const updateFav = (k, item) => {
       item.isFav = Boolean(k)
       item.favCount += (k ? 1 : -1)
+    }
+
+    const handleGetAllComments = async (fn, comments, offset, count) => {
+      await fn(comments, offset, count)
+    }
+
+    const showAllComments = async (flag) => {
+      show.value = true
+      // 第一次获取
+      console.log(curTTCommentCount.value);
+      if(!curTTCommentCount.value) {
+        await handleGetAllComments(_getComments, allMYComments, curMYCommentCount, 10)
+        await handleGetAllComments(_getNewsComments, allTTComments, curTTCommentCount, 10)
+        allComments.value = allTTComments.value
+        return
+      }
+
+      if(!flag) {
+        if(curAllComment.value) {
+          handleGetAllComments(_getComments, allMYComments, curMYCommentCount, 10)
+          allComments.value = allMYComments.value
+        } else {
+          handleGetAllComments(_getNewsComments, allTTComments, curTTCommentCount, 10)
+          allComments.value = allTTComments.value
+        }
+      }
+    }
+
+    const changeAllComment = (toggle, i) => {
+      if(isAllFirstShow.value) isAllFirstShow.value = false
+      curAllComment.value = i
+      allComments.value = i ? allMYComments.value : allTTComments.value
+      toggle()
+    }
+
+    const updateAllComment = async (id) => {
+      let idx = allMYComments.value.data.comments.findIndex(n => n._id === id)
+      await getComments({
+        item_id: route.params.item_id,
+        user_id: store.state.user.id,
+        offset: idx,
+        count: 1
+      }).then(res => {
+        allMYComments.value.data.comments.splice(idx, 1, res.data.comments[0])
+      }).catch(err => {
+        console.log(err);
+      })
     }
 
     onMounted(() => {
@@ -178,7 +331,7 @@ export default {
     })
     
     _getNewsDetails()
-    _getNewsComments()
+    _getNewsComments(newsComments)
     _getNews()
     return {
       newsDetails,
@@ -186,21 +339,47 @@ export default {
       news,
       overlay,
       isFirstShow,
+      isAllFirstShow,
       changeComment,
       win,
       updateFav,
       updateComment,
-      newsTime
+      updateAllComment,
+      newsTime,
+      showAllComments,
+      changeAllComment,
+      curTTCommentCount,
+      curMYCommentCount,
+      show,
+      allComments
     };
   },
 };
 </script>
+
+<style>
+  .pgc-img {
+    text-align: center;
+  }
+  .pgc-img img {
+    display: inline-block;
+    width: 100%;
+  }
+</style>
 
 <style scoped>
   .text-area {
     background: rgb(228, 228, 228);
     border: 3px solid gray;
     border-radius: 5px;
+  }
+  .nav-top {
+    position: fixed;
+    top: 0;
+    display: flex;
+    z-index: 10000;
+    width: 100%;
+    background: white;
   }
 
   .btn {
@@ -227,10 +406,5 @@ export default {
     font-size: 14px;
     color: grey;
   }
-  /*img{*/
-  /*  display: inline-block;*/
-  /*  width: 100%;*/
-  /*  align-content: center;*/
-  /*}*/
 </style>
 

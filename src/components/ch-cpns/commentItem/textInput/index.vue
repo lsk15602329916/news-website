@@ -48,7 +48,7 @@ export default {
         text: commentContent.value
       }
       await comment(o).then(res => {
-        context.emit('update-comment')
+        context.emit('update-comment', props.belong_comment || props.replyTo)
         commentContent.value = ''
       }).catch(err => {
         console.log(err);
