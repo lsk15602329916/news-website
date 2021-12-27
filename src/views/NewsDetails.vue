@@ -357,7 +357,10 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+  .container {
+    background: #333333;
+  }
   .pgc-img {
     text-align: center;
   }
@@ -365,9 +368,6 @@ export default {
     display: inline-block;
     width: 100%;
   }
-</style>
-
-<style scoped>
   .text-area {
     background: rgb(228, 228, 228);
     border: 3px solid gray;

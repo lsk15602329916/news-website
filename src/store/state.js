@@ -11,5 +11,7 @@ export default {
   alertInfo: {
     text: '',
     type: 'success'
-  }
+  }, 
+
+  theme: localStorage.getItem('theme') || 'light'
 }

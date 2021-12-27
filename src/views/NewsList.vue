@@ -1,5 +1,5 @@
 <template>
-  <div class="news-item" v-for="(item, i) in newsList" :key="i">
+  <div :class="news_item" v-for="(item, i) in newsList" :key="i">
     <newsItem :item="item" />
   </div>
 </template>
@@ -18,6 +18,7 @@ export default {
     return {
       topic: this.$router,
       newsList: [],
+      news_item: 'news-item-light'
       // tag: this.$router.tag,
     };
   },
@@ -81,11 +82,16 @@ export default {
 </script>
 
 <style scoped>
-.news-item {
+.news-item-light {
   margin: 10px;
   background-color: rgba(0, 0, 0, 0);
   border-bottom: 2px dashed black;
   color: gray;
+}
+.news-item-dark {
+  margin: 10px;
+  background-color: rgba(0, 0, 0, 0);
+  border-bottom: 2px dashed black;
 }
 .content {
   background-color: rgba(0, 0, 0, 0);
