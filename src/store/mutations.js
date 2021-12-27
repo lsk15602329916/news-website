@@ -19,5 +19,8 @@ export default {
 
       _state[lastKey] = data
     }
+  },
+  setTheme(state, val) {
+    state.theme = val
   }
 }

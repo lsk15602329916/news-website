@@ -1,6 +1,18 @@
 <template>
-  <div id="bg">
+  <div :id="$store.state.theme">
     <div class="display-box">
+      <div class="header">
+        <el-switch
+          class="ma-2"
+          v-model="f"
+          @change="toggle"
+          active-color="#00000090"
+          inactive-color="#ffffff80"
+          active-value="light"
+          inactive-value="dark"
+        />
+        <LoginDialog></LoginDialog>
+      </div>
       <div class="banner">
         <div class="figure">
           <div class="banner-img"></div>
@@ -113,9 +125,14 @@ export default {
     ];
     return {
       newsItems,
+      f: "bg-dark",
     };
   },
   methods: {
+    toggle(e) {
+      console.log("e: ", e);
+      this.$store.commit("setTheme", e);
+    },
     selectNewsType(item) {
       this.newsItems.forEach((item) => {
         item.active = false;
@@ -128,13 +145,26 @@ export default {
     console.log("mounted", this);
     this.$vuetify.theme.themes.light.primary = "red";
   },
+  computed: {
+    theme() {
+      return this.$store.state.theme;
+    },
+  },
+  watch: {
+    theme: {
+      handler(newVal, oldVal) {
+        console.log("newVal: ", newVal);
+        localStorage.setItem("theme", newVal);
+      },
+    },
+  },
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 @import url("https://fonts.font.im/css?family=Abril+Fatface");
 /* 背景 */
-#bg {
+#light {
   width: 100%;
   min-height: 100vh;
   display: flex;
@@ -145,6 +175,13 @@ export default {
     rgba(255, 228, 249, 0.8) 0%,
     rgba(205, 217, 252, 0.8) 100%
   );
+}
+#dark {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .frontpage_title {
   letter-spacing: 0.05em;
@@ -190,7 +227,7 @@ export default {
 @keyframes updown {
   0%,
   100% {
-    margin-top: 0rem;
+    margin-top: 0px;
   }
   50% {
     margin-top: -1rem;
@@ -219,7 +256,13 @@ export default {
   color: rgb(100, 126, 243);
   font-weight: 500;
 }
-
+.display-box {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
 .container {
   width: 70%;
   min-height: 75vh;

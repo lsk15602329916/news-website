@@ -19,7 +19,8 @@ export default {
     return {
       topic: this.$router,
       newsList: [],
-      tag: '__all__'
+      tag: '__all__',
+      news_item: 'news-item-light'
     };
   },
   methods: {
@@ -106,11 +107,14 @@ export default {
 </script>
 
 <style scoped>
+
 .news-item {
   position: relative;
+}
+.news-item-light {
+  margin: 10px;
   background-color: rgba(0, 0, 0, 0);
 }
-
 .news-item::after {
   content: "";
   position: absolute;
@@ -120,5 +124,13 @@ export default {
   width: 60%;
   height: 1px;
   background: linear-gradient(to right, white, rgba(34, 34, 34, 0.609), white);
+}
+.news-item-dark {
+  margin: 10px;
+  background-color: rgba(0, 0, 0, 0);
+  border-bottom: 2px dashed black;
+}
+.content {
+  background-color: rgba(0, 0, 0, 0);
 }
 </style>
