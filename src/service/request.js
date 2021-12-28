@@ -21,6 +21,24 @@ export default function request(config) {
     )
 
     // http response 拦截器
+    // instance.interceptors.response.use(
+    //     response => {
+    //         //拦截响应，做统一处理
+    //         Utils.update('loading', false)
+    //         if (response.data.code === 401) {
+    //             sessionStorage.removeItem('Authorization')
+    //             return response.data
+    //         } else {
+    //             if (response.data.success) {
+    //                 return response.data
+    //             } else {
+    //                 throw response.data
+    //             }
+    //         }
+    //     }
+    // )
+
+    // http response 拦截器
     instance.interceptors.response.use(
         response => {
             //拦截响应，做统一处理
@@ -29,28 +47,7 @@ export default function request(config) {
                 sessionStorage.removeItem('Authorization')
                 return response.data
             } else {
-                if (response.data.success) {
-                    return response.data
-                } else {
-                    throw response.data
-                }
-            }
-        }
-    )
-
-    // http response 拦截器
-    instance.interceptors.response.use(
-        response => {
-            //拦截响应，做统一处理
-            if (response.data.code === 401) {
-                sessionStorage.removeItem('Authorization')
-                return response.data
-            } else {
-                if (response.data.success) {
-                    return response.data
-                } else {
-                    throw response.data
-                }
+              return response.data
             }
         },
         //接口错误状态处理，也就是说无响应时的处理

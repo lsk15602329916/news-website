@@ -1,5 +1,9 @@
 <template>
-  <v-card flat @click="open">
+  <v-card
+    flat 
+    @click="open"
+    :theme="$store.state.theme"
+  >
     <v-card-title>
       {{ news.title }}
       <v-spacer></v-spacer>

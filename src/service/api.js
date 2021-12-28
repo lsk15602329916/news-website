@@ -38,10 +38,12 @@ export async function sendSMS(phoneNumber) {
             phoneNumber
         }
     })
-    return request({
-        url: OPT.GETNEWSCOMMENTS,
-        params
-    })
+    // return request({
+    //   url: OPT.SENDSMS,
+    //   params: {
+    //     phoneNumber
+    //   }
+    // })
 }
 
 export async function getComments(params) {

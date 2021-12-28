@@ -1,5 +1,8 @@
 <template>
-  <v-card flat>
+  <v-card
+    flat
+    :theme="$store.state.theme"
+  >
     <div class="d-flex pa-2">
       <v-avatar size="36">
         <img

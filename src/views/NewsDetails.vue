@@ -1,5 +1,9 @@
 <template>
-  <v-container ref="win">
+  <v-container
+    :theme="$store.state.theme"
+    fluid
+    ref="win"
+  >
     <v-row>
       <v-col cols="2">
       </v-col>
@@ -9,7 +13,7 @@
           <span class="son" v-html="newsTime  +  '&nbsp' + '&nbsp' + '&nbsp'+ '&nbsp'+ '&nbsp'+ ' 来源：' + newsDetails.data?.source" > </span>
         </div>
         <div v-html="newsDetails.data?.content" class="test"></div>
-        <v-divider class="my-5"></v-divider>
+        <v-divider class="my-5" :theme="$store.state.theme"></v-divider>
         <!-- <p class="font-weight-bold my-2">精彩评论</p> -->
         <v-item-group class="d-flex" mandatory>
           <v-item v-slot="{ isSelected, toggle }">
@@ -29,7 +33,7 @@
               </v-scroll-y-transition>
             </v-card>
           </v-item>
-          <v-divider vertical class="mx-1"></v-divider>
+          <v-divider vertical class="mx-1" :theme="$store.state.theme"></v-divider>
           <v-item v-slot="{ isSelected, toggle }">
             <v-card
               :color="isSelected ? 'orange' : ''"
@@ -60,11 +64,11 @@
             @update-com="updateComment"
             :comment="item"
           />
-          <v-btn v-if="newsComments.data?.has_more" @click="showAllComments(1)" block>
+          <v-btn v-if="newsComments.data?.has_more" @click="showAllComments(1)" block :theme="$store.state.theme">
             <span class="grey--text">查看全部评论 >></span>
           </v-btn>
         </div>
-        <v-divider class="my-5"></v-divider>
+        <v-divider class="my-5" :theme="$store.state.theme"></v-divider>
         <p class="font-weight-bold my-2">热门推荐</p>
         <div>
           <news-item
@@ -85,9 +89,11 @@
     disable-resize-watcher
     width="400"
     app
+    :theme="$store.state.theme"
   >
     <v-list-item
-      class="px-2 nav-top"
+      class="px-2"
+      :class="{'nav-top-dark': $store.state.theme === 'dark', 'nav-top-light': $store.state.theme === 'light'}"
     >
       <v-item-group class="d-flex" mandatory>
         <v-item v-slot="{ isSelected, toggle }">
@@ -107,7 +113,7 @@
             </v-scroll-y-transition>
           </v-card>
         </v-item>
-        <v-divider vertical class="mx-1"></v-divider>
+        <v-divider vertical class="mx-1" :theme="$store.state.theme"></v-divider>
         <v-item v-slot="{ isSelected, toggle }">
           <v-card
             :color="isSelected ? 'orange' : ''"
@@ -136,7 +142,7 @@
         <v-icon>mdi-chevron-left</v-icon>
       </v-btn>
     </v-list-item>
-    <v-divider class="mt-16"></v-divider>
+    <v-divider class="mt-16" :theme="$store.state.theme"></v-divider>
     <comment-item
       v-for="item in allComments.data?.comments"
       :key="item.id"
@@ -145,8 +151,9 @@
       @update-com="updateAllComment"
     />
     <v-btn
-      @click="showAllComments"
+      @click="showAllComments(0)"
       block
+      :theme="$store.state.theme"
     >
       加载更多...
     </v-btn>
@@ -190,6 +197,7 @@ export default {
 
     const _getNewsDetails = async () => {
       newsDetails.value = await getNewsDetails(route.params.item_id);
+      document.title = newsDetails.value.data.title
       let time = new Date(parseInt(newsDetails.value.data?.publish_time) * 1000)
       let year = time.getFullYear()
       let month = time.getMonth() + 1
@@ -278,20 +286,19 @@ export default {
     const showAllComments = async (flag) => {
       show.value = true
       // 第一次获取
-      console.log(curTTCommentCount.value);
       if(!curTTCommentCount.value) {
         await handleGetAllComments(_getComments, allMYComments, curMYCommentCount, 10)
         await handleGetAllComments(_getNewsComments, allTTComments, curTTCommentCount, 10)
         allComments.value = allTTComments.value
         return
       }
-
+      console.log(flag);
       if(!flag) {
         if(curAllComment.value) {
-          handleGetAllComments(_getComments, allMYComments, curMYCommentCount, 10)
+          await handleGetAllComments(_getComments, allMYComments, curMYCommentCount, 10)
           allComments.value = allMYComments.value
         } else {
-          handleGetAllComments(_getNewsComments, allTTComments, curTTCommentCount, 10)
+          await handleGetAllComments(_getNewsComments, allTTComments, curTTCommentCount, 10)
           allComments.value = allTTComments.value
         }
       }
@@ -357,23 +364,18 @@ export default {
 };
 </script>
 
-<style scoped>
-  .container {
-    background: #333333;
-  }
+<style>
   .pgc-img {
     text-align: center;
   }
-  .pgc-img img {
+  .test img {
     display: inline-block;
     width: 100%;
   }
-  .text-area {
-    background: rgb(228, 228, 228);
-    border: 3px solid gray;
-    border-radius: 5px;
-  }
-  .nav-top {
+</style>
+
+<style scoped>
+  .nav-top-light {
     position: fixed;
     top: 0;
     display: flex;
@@ -381,6 +383,15 @@ export default {
     width: 100%;
     background: white;
   }
+  .nav-top-dark {
+    position: fixed;
+    top: 0;
+    display: flex;
+    z-index: 10000;
+    width: 100%;
+    background: #212121;
+  }
+
 
   .btn {
     color: white;

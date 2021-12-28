@@ -363,7 +363,7 @@ export default defineComponent({
     const carousel2 = ref();
     const isAgree = ref(false)
     const ruleForm = reactive({
-      phoneNumber: "15602329916",
+      phoneNumber: "18319328003",
       password: "",
       confirm: "",
     });
@@ -419,8 +419,8 @@ export default defineComponent({
       buttonStatus.value = true;
     };
     // 获取验证码
-    const _sendSMS = () => {
-      sendSMS(ruleForm.phoneNumber)
+    const _sendSMS = async () => {
+      await sendSMS(ruleForm.phoneNumber)
     }
       _sendSMS()
 

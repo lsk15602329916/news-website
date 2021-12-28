@@ -54,9 +54,9 @@
         </div>
       </div>
     </div>
-    <div class="header">
+    <!-- <div class="header">
       <LoginDialog></LoginDialog>
-    </div>
+    </div> -->
   </div>
 </template>
 

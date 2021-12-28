@@ -72,7 +72,7 @@ export default {
 <style scoped>
   .text-area {
     background: rgb(228, 228, 228);
-    border: 3px solid gray;
+    outline: none;
     border-radius: 5px;
   }
 
