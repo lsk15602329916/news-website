@@ -20,8 +20,8 @@ export default {
 <style scoped>
 .card {
   margin: 8px;
-  height: 60px;
-  width: 100px;
+  height: 3rem;
+  width: 8%;
   background-color: rgba(255, 255, 255, 0);
   display: flex;
   justify-content: center;
@@ -34,7 +34,6 @@ export default {
 }
 .card:hover {
   color: rgb(100, 126, 243);
-  
   border-bottom: 2px solid rgb(100, 126, 243);
 }
 .card.active {
@@ -43,15 +42,10 @@ export default {
 }
 .content {
   height: 40px;
-  width: 100px;
+  width: 100%;
   margin: 10px 10px;
   display: flex;
   justify-content: center;
-}
-.news-icon {
-  width: 40px;
-  height: 40px;
-  background-size: contain;
 }
 
 </style>

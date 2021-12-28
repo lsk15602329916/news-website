@@ -6,6 +6,7 @@ import vuetify from './plugins/vuetify'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import { loadFonts } from './plugins/webfontloader'
+import '@/assets/css/h.css'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 
