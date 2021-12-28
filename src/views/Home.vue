@@ -63,13 +63,8 @@
 <script>
 import NewsNavigator from "./NewsNavigator.vue";
 import NewsList from "./NewsList.vue";
-<<<<<<< HEAD
 import LoginDialog from '../components/loginDialog.vue'
 import Utils from '@/utils';
-=======
-import LoginDialog from "../components/loginDialog.vue";
-
->>>>>>> ed834bbc4df163890e6462791058ac0189f4586a
 export default {
   name: "Home",
   components: { NewsNavigator, NewsList, LoginDialog },

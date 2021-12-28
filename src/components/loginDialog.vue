@@ -1,7 +1,4 @@
 <template>
-<<<<<<< HEAD
-  <el-button type="primary" size="small" @click="dialogVisible = true"
-=======
   <el-button
     size="small"
     @click="dialogVisible = true"
@@ -14,7 +11,6 @@
       --el-button-active-border-color: rgb(100, 126, 243);
       color: white;
     "
->>>>>>> ed834bbc4df163890e6462791058ac0189f4586a
     >登录</el-button
   >
   <el-dialog
@@ -22,7 +18,6 @@
     title="登录后内容更精彩"
     width="40%"
     :before-close="handleClose"
-<<<<<<< HEAD
     class="dialog"
     :center="true"
   >
@@ -284,84 +279,14 @@
         </el-carousel>
       </el-card>
       <!-- 注册 -->
-=======
-  >
-    <div class="box" :class="rotate ? 'flip' : ''">
-      <el-card shadow="never" class="login">
-        <el-row>
-          <el-col :span="14">
-            <el-form :rules="rules" ref="fromV" :model="ruleForm">
-              <el-form-item prop="username">
-                <el-input
-                  v-model="ruleForm.username"
-                  placeholder="请输入邮箱地址"
-                ></el-input>
-              </el-form-item>
-              <el-form-item prop="password">
-                <el-input
-                  v-model="ruleForm.password"
-                  placeholder="请输入密码"
-                  type="password"
-                ></el-input>
-              </el-form-item>
-              <el-form-item>
-                <el-checkbox
-                  style="
-                    color: rgb(176, 190, 252);
-                    --el-checkbox-checked-text-color: rgb(100, 126, 243);
-                    --el-checkbox-checked-bg-color: rgb(100, 126, 243);
-                  "
-                  label="是否同意《用户协议》和《隐私政策》"
-                  name="type"
-                ></el-checkbox>
-              </el-form-item>
-              <el-form-item size="large">
-                <el-button
-                  type="primary"
-                  style="
-                    --el-button-bg-color: rgb(176, 190, 252);
-                    --el-button-border-color: rgb(176, 190, 252);
-                    --el-button-hover-bg-color: rgb(100, 126, 243);
-                    --el-button-hover-border-color: rgb(100, 126, 243);
-                    --el-button-active-bg-color: rgb(100, 126, 243);
-                    --el-button-active-border-color: rgb(100, 126, 243);
-                    width: 100%;
-                  "
-                  >登录</el-button
-                >
-              </el-form-item>
-              <div class="flex">
-                <el-link
-                  type="primary"
-                  @click="rotate = !rotate"
-                  style="color: rgb(100, 126, 243)"
-                  >注册</el-link
-                >
-                <el-link type="primary" style="color: rgb(100, 126, 243)"
-                  >忘记密码</el-link
-                >
-              </div>
-            </el-form>
-          </el-col>
-          <el-col></el-col>
-        </el-row>
-      </el-card>
->>>>>>> ed834bbc4df163890e6462791058ac0189f4586a
       <el-card shadow="never" class="register">
         <el-row>
           <el-col :span="14">
             <el-form :rules="rules" ref="fromV" :model="ruleForm">
-<<<<<<< HEAD
               <el-form-item prop="phoneNumber">
                 <el-input
                   v-model="ruleForm.phoneNumber"
                   placeholder="请输入手机号码"
-=======
-              <el-form-item prop="username">
-                <el-input
-                  v-model="ruleForm.username"
-                  placeholder="请输入邮箱地址"
->>>>>>> ed834bbc4df163890e6462791058ac0189f4586a
                 ></el-input>
               </el-form-item>
               <el-form-item prop="password">
@@ -371,7 +296,6 @@
                   type="password"
                 ></el-input>
               </el-form-item>
-<<<<<<< HEAD
               <el-form-item prop="confirm">
                 <el-input
                   v-model="ruleForm.confirm"
@@ -393,53 +317,17 @@
               <el-form-item>
                 <el-checkbox
                   v-model="isAgree"
-=======
-              <el-form-item>
-                <el-checkbox
-                  style="
-                    color: rgb(176, 190, 252);
-                    --el-checkbox-checked-text-color: rgb(100, 126, 243);
-                    --el-checkbox-checked-bg-color: rgb(100, 126, 243);
-                  "
->>>>>>> ed834bbc4df163890e6462791058ac0189f4586a
                   label="是否同意《用户协议》和《隐私政策》"
                   name="type"
                 ></el-checkbox>
               </el-form-item>
               <el-form-item size="large">
-<<<<<<< HEAD
                 <el-button type="primary" style="width: 100%" :disabled='!isAgree'
                   >注册并登录</el-button
                 >
               </el-form-item>
               <div class="flex">
                 <el-link type="primary" @click="rotate = !rotate">登录</el-link>
-=======
-                <el-button
-                  type="primary"
-                  style="
-                    --el-button-bg-color: rgb(176, 190, 252);
-                    --el-button-border-color: rgb(176, 190, 252);
-                    --el-button-hover-bg-color: rgb(100, 126, 243);
-                    --el-button-hover-border-color: rgb(100, 126, 243);
-                    --el-button-active-bg-color: rgb(100, 126, 243);
-                    --el-button-active-border-color: rgb(100, 126, 243);
-                    width: 100%;
-                  "
-                  >注册</el-button
-                >
-              </el-form-item>
-              <div class="flex">
-                <el-link
-                  type="primary"
-                  @click="rotate = !rotate"
-                  style="color: rgb(100, 126, 243)"
-                  >登录</el-link
-                >
-                <el-link type="primary" style="color: rgb(100, 126, 243)"
-                  >忘记密码</el-link
-                >
->>>>>>> ed834bbc4df163890e6462791058ac0189f4586a
               </div>
             </el-form>
           </el-col>
@@ -451,7 +339,6 @@
 </template>
 
 <script>
-<<<<<<< HEAD
 import {
   defineComponent,
   onMounted,
@@ -461,10 +348,6 @@ import {
 } from "@vue/runtime-core";
 import { ElMessageBox } from "element-plus";
 import { sendSMS } from "@/service/api";
-=======
-import { defineComponent, reactive, ref, toRefs } from "@vue/runtime-core";
-import { ElMessageBox } from "element-plus";
->>>>>>> ed834bbc4df163890e6462791058ac0189f4586a
 // import MyInput from './input.vue'
 
 export default defineComponent({
@@ -476,7 +359,6 @@ export default defineComponent({
     const dialogVisible = ref(false);
     const rotate = ref(false);
     let fromV = ref(null);
-<<<<<<< HEAD
     const carousel = ref();
     const carousel2 = ref();
     const isAgree = ref(false)
@@ -511,34 +393,6 @@ export default defineComponent({
     const progress = ref("手机验证");
     const tabName2 = reactive(["手机验证", "密码修改"]);
     const isLogin = ref(true);
-=======
-    const ruleForm = reactive({
-      username: "",
-      password: "",
-    });
-    // const username = ref('')
-    // const password = ref('')
-
-    const rules = {
-      username: [
-        { required: true, message: "用户名不能为空", trigger: "blur" },
-        {
-          pattern: /^w+$/,
-          message: "用户名只能由字母和数字组成",
-          trigger: "blur",
-        },
-      ],
-      password: [
-        { required: true, message: "密码不能为空", trigger: "blur" },
-        { min: 6, max: 15, message: "密码位数只能在6~15之间", trigger: "blur" },
-        {
-          pattern: /^[A-Za-z0-9][A-Z-z0-9_.]{5,14}$/,
-          message: "密码由字母或数字开头，且只能为字母,数字,下划线及（.）",
-          trigger: "blur",
-        },
-      ],
-    };
->>>>>>> ed834bbc4df163890e6462791058ac0189f4586a
     // 关闭弹窗
     const handleClose = (done) => {
       ElMessageBox.confirm("Are you sure to close this dialog?")
@@ -549,7 +403,6 @@ export default defineComponent({
           // catch error
         });
     };
-<<<<<<< HEAD
 
     // 切换登录方式
     const changeTab = () => {
@@ -587,8 +440,6 @@ export default defineComponent({
       };
       timer = setInterval(cb, 1000);
     };
-=======
->>>>>>> ed834bbc4df163890e6462791058ac0189f4586a
 
     // 修改密码
     const findPassword = () => {
@@ -619,7 +470,6 @@ export default defineComponent({
       // password,
       rules,
       handleClose,
-<<<<<<< HEAD
       confirmTime,
       getConfirm,
       buttonStatus,
@@ -633,8 +483,6 @@ export default defineComponent({
       isLogin,
       findPassword,
       isAgree
-=======
->>>>>>> ed834bbc4df163890e6462791058ac0189f4586a
     };
   },
 });
@@ -651,7 +499,6 @@ a:active {
 }
 a:hover {
   text-decoration: underline;
-<<<<<<< HEAD
   color: gray;
 }
 
@@ -661,13 +508,6 @@ a:hover {
   align-items: center;
   // position: relative;
   // overflow: hidden;
-=======
-  color: grey;
-}
-
-.box {
-  height: 300px;
->>>>>>> ed834bbc4df163890e6462791058ac0189f4586a
 }
 
 .flex {
@@ -681,13 +521,10 @@ a:hover {
 .el-dialog__title {
   font-size: 24px;
 }
-<<<<<<< HEAD
 .el-card__body {
   height: 100%;
 }
 
-=======
->>>>>>> ed834bbc4df163890e6462791058ac0189f4586a
 .login {
   transform: rotateY(0deg);
 }
@@ -696,12 +533,7 @@ a:hover {
   transform: rotateY(-180deg);
 }
 
-<<<<<<< HEAD
 .login {
-=======
-.login,
-.register {
->>>>>>> ed834bbc4df163890e6462791058ac0189f4586a
   width: 94%;
   position: absolute;
   backface-visibility: hidden;

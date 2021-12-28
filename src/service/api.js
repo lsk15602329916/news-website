@@ -20,7 +20,6 @@ export async function getNewsDetails(id) {
 }
 
 export async function getNewsComments(params) {
-<<<<<<< HEAD
     return request({
         url: OPT.GETNEWSCOMMENTS,
         params
@@ -39,39 +38,37 @@ export async function sendSMS(phoneNumber) {
             phoneNumber
         }
     })
-=======
-  return request({
-    url: OPT.GETNEWSCOMMENTS,
-    params
-  })
+    return request({
+        url: OPT.GETNEWSCOMMENTS,
+        params
+    })
 }
 
 export async function getComments(params) {
-  return request({
-    url: OPT.GETCOMMENTS,
-    params
-  })
+    return request({
+        url: OPT.GETCOMMENTS,
+        params
+    })
 }
 
 export async function comment(data) {
-  return request({
-    url: OPT.COMMENT,
-    method: 'POST',
-    data,
-    headers: {
-      'content-type': 'application/json'
-    }
-  })
+    return request({
+        url: OPT.COMMENT,
+        method: 'POST',
+        data,
+        headers: {
+            'content-type': 'application/json'
+        }
+    })
 }
 
 export async function favComment(data) {
-  return request({
-    url: OPT.FAVCOMMENT,
-    method: 'POST',
-    data,
-    headers: {
-      'content-type': 'application/json'
-    }
-  })
->>>>>>> ed834bbc4df163890e6462791058ac0189f4586a
+    return request({
+        url: OPT.FAVCOMMENT,
+        method: 'POST',
+        data,
+        headers: {
+            'content-type': 'application/json'
+        }
+    })
 }
