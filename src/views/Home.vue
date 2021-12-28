@@ -3,6 +3,14 @@
     <div class="display-box">
       <div class="header">
         <LoginDialog></LoginDialog>
+        <v-icon
+          :size='40'
+          color="green darken-2"
+          style="cursor: pointer; "
+          @click="toHomepage"
+        >
+          mdi-account-circle
+        </v-icon>
       </div>
       <div class="banner">
         <div class="figure">
@@ -34,7 +42,7 @@
 import NewsNavigator from "./NewsNavigator.vue";
 import NewsList from "./NewsList.vue";
 import LoginDialog from '../components/loginDialog.vue'
-
+import Utils from '@/utils';
 export default {
   name: "Home",
   components: { NewsNavigator, NewsList, LoginDialog},
@@ -112,6 +120,15 @@ export default {
       item.active = !item.active;
       this.$router.push({ name: "NewsList", params: { tag: item.tag } });
     },
+    toHomepage() {
+      Utils.openTag(
+        `homePage`, 
+        // {
+        //   item_id: item_id,
+        //   group_id: group_id
+        // }
+      )
+    }
   },
 };
 </script>

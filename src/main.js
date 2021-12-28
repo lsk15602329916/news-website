@@ -9,6 +9,12 @@ import { loadFonts } from './plugins/webfontloader'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 
+import * as ElIconModules from '@element-plus/icons-vue'
+// 导入转换图标名称的函数
+import Utils from './utils/index';
+
+
+
 loadFonts()
 
 const app = createApp(App)
@@ -19,3 +25,8 @@ const app = createApp(App)
     .use(VueAxios, axios);
 
 app.mount('#app')
+
+// 统一注册el-icon图标
+for (let iconName in ElIconModules) {
+    app.component(Utils.transElIconName(iconName), ElIconModules[iconName])
+}

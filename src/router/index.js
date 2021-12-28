@@ -4,6 +4,8 @@ import NewsList from '../views/NewsList.vue'
 
 import NewsDetails from '@/views/NewsDetails';
 
+import homePage from '@/views/homePage'
+
 const HomeChildren = [{
         path: '',
         redirect: '/home/__all__'
@@ -29,6 +31,12 @@ const routes = [{
         path: '/details/:item_id',
         name: 'NewsDetails',
         component: NewsDetails,
+    },
+    {
+        // path: '/homePage/:user_id',
+        path: '/homePage',
+        name: 'homePage',
+        component: homePage,
     },
 ]
 
