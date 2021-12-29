@@ -24,7 +24,8 @@ export default function request(config) {
     instance.interceptors.response.use(
         response => {
             Utils.update('loading', false)
-            //拦截响应，做统一处理
+                //拦截响应，做统一处理
+            Utils.update('loading', false)
             if (response.data.code === 401) {
                 Utils.update('token', '')
                 localStorage.removeItem('_TOKEN')

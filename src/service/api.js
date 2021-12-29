@@ -31,10 +31,10 @@ export async function likeNews(item_id) {
         url: OPT.LIKENEWS,
         method: 'POST',
         data: {
-          item_id
+            item_id
         },
         headers: {
-          'content-type': 'application/json'
+            'content-type': 'application/json'
         },
     })
 }
@@ -123,6 +123,42 @@ export async function loginByVercode(data) {
 export async function getUserInfo(params) {
     return request({
         url: OPT.GETUSERINFO,
+        params
+    })
+}
+
+// 修改个人信息
+export async function uploadUserInfo(data) {
+    return request({
+        url: OPT.UPLOADUSERINFO,
+        method: 'POST',
+        data,
+        headers: {
+            'content-type': 'application/json'
+        }
+    })
+}
+
+// 获取点赞列表
+export async function getLikeList(params) {
+    return request({
+        url: OPT.GETLIKELIST,
+        params
+    })
+}
+
+// 获取历史记录
+export async function getHistory(params) {
+    return request({
+        url: OPT.GETHISTORY,
+        params
+    })
+}
+
+// 获取收藏列表
+export async function getFavList(params) {
+    return request({
+        url: OPT.GETFAVLIST,
         params
     })
 }

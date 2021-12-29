@@ -46,6 +46,7 @@
                     <el-input
                       v-model="loginForm.password"
                       placeholder="请输入密码"
+                      show-password
                       type="password"
                     ></el-input>
                   </el-form-item>
@@ -335,6 +336,8 @@ import {
 import { ElMessageBox } from "element-plus";
 import { sendSMS, register, loginByPassword, loginByVercode, getUserInfo } from "@/service/api";
 import { ElMessage } from 'element-plus'
+import head1 from '@/assets/image/head1.png'
+
 import Utils from '@/utils';
 // import MyInput from './input.vue'
 
@@ -467,7 +470,7 @@ export default defineComponent({
       loginByPassword({
         phone: form.phoneNumber,
         password: form.password
-      }).then(({data:{code, token}}) => {
+      }).then(({data:{code, token, userid}}) => {
         // console.log(code, token);
         if(code === 3200) {
           Utils.update('token', token)
@@ -488,7 +491,7 @@ export default defineComponent({
       loginByVercode({
         phone: form.phoneNumber,
         vercode: form.confirmSMS
-      }).then(({data: {code, token}}) => {
+      }).then(({data: {code, token, userid}}) => {
         if(code === 3200) {
           Utils.update('token', token)
           // dialogVisible.value = false
