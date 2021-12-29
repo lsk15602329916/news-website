@@ -61,12 +61,6 @@
         </div>
       </div>
     </div>
-<<<<<<< HEAD
-=======
-    <!-- <div class="header">
-      <LoginDialog></LoginDialog>
-    </div> -->
->>>>>>> b8f80c8840cd2ed3bcf031cb68b7e78f75dd88c2
   </div>
 </template>
 
