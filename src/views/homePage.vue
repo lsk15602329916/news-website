@@ -4,14 +4,14 @@
     <el-header height="110px">
       <el-row>
         <el-col :span="4">
-          <el-avatar :size="100" :src="circleUrl"></el-avatar>
+          <el-avatar :size="100" :src="formMessage.head"></el-avatar>
         </el-col>
         <el-col :span="5" class="flex flex-column justify-sa">
-          <div>这是昵称</div>
+          <div class="f-24">{{formMessage.name}}</div>
           <div class="flex flex-row justity-st">
-            <div class="mr-10">点赞</div>
-            <div class="mr-10">收藏</div>
-            <div>关注</div>
+            <div class="mr-10">点赞 0</div>
+            <div class="mr-10">收藏 0</div>
+            <div>关注 0</div>
           </div>
         </el-col>
       </el-row>
@@ -83,13 +83,15 @@
 <script>
 import { reactive, ref } from 'vue-demi';
 // import { IconPicture } from '@element-plus/icons-vue'
+import head1 from '@/assets/image/head1.png'
 export default {
   setup() {
     const formMessage = reactive({
-      name: '123123',
-      phoneNumber: '15602329916',
-      sex: '男',
-      birth: '2020-12-01'
+      head: head1,
+      name: sessionStorage.getItem("username"),
+      phoneNumber: sessionStorage.getItem("phoneNumber"),
+      sex: sessionStorage.getItem("gender"),
+      birth: sessionStorage.getItem("birthday")
     })
     const formRules = {
       phoneNumber: [
@@ -211,7 +213,9 @@ export default {
     -webkit-box-orient: vertical;
       margin-bottom: 10px;
 }
-
+.f-24{
+  font-size: 24px;
+}
 .news:hover{
   cursor: pointer;
 }

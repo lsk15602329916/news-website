@@ -26,7 +26,7 @@ export async function getNewsComments(params) {
     })
 }
 
-
+// 获取验证码
 export async function sendSMS(phoneNumber) {
     return request({
         url: OPT.SENDSMS,
@@ -37,10 +37,6 @@ export async function sendSMS(phoneNumber) {
         data: {
             phoneNumber
         }
-    })
-    return request({
-        url: OPT.GETNEWSCOMMENTS,
-        params
     })
 }
 
@@ -70,5 +66,50 @@ export async function favComment(data) {
         headers: {
             'content-type': 'application/json'
         }
+    })
+}
+
+// 注册帐号
+
+export async function register(data) {
+    return request({
+        url: OPT.REGISTER,
+        method: 'POST',
+        data,
+        headers: {
+            'content-type': 'application/json'
+        }
+    })
+}
+
+// 密码登录
+export async function loginByPassword(data) {
+    return request({
+        url: OPT.LOGINBYPASSWORD,
+        method: 'POST',
+        data,
+        headers: {
+            'content-type': 'application/json'
+        }
+    })
+}
+
+// 验证码登录
+export async function loginByVercode(data) {
+    return request({
+        url: OPT.LOGINBYVERCODE,
+        method: 'POST',
+        data,
+        headers: {
+            'content-type': 'application/json'
+        }
+    })
+}
+
+// 获取个人信息
+export async function getUserInfo(params) {
+    return request({
+        url: OPT.GETUSERINFO,
+        params
     })
 }

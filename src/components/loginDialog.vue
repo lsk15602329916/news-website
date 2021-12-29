@@ -49,16 +49,16 @@
           <el-carousel-item>
             <el-row>
               <el-col :span="14">
-                <el-form :rules="rules" ref="fromV" :model="ruleForm">
+                <el-form :rules="rules" ref="fromV" :model="loginForm">
                   <el-form-item prop="phoneNumber">
                     <el-input
-                      v-model="ruleForm.phoneNumber"
+                      v-model="loginForm.phoneNumber"
                       placeholder="请输入手机号码"
                     ></el-input>
                   </el-form-item>
                   <el-form-item prop="password">
                     <el-input
-                      v-model="ruleForm.password"
+                      v-model="loginForm.password"
                       placeholder="请输入密码"
                       type="password"
                     ></el-input>
@@ -71,7 +71,7 @@
                     ></el-checkbox>
                   </el-form-item>
                   <el-form-item size="large">
-                    <el-button type="primary" style="width: 100%" :disabled='!isAgree'
+                    <el-button type="primary" style="width: 100%" :disabled='!isAgree' @click="login"
                       >登录</el-button
                     >
                   </el-form-item>
@@ -91,16 +91,16 @@
           <el-carousel-item>
             <el-row>
               <el-col :span="14">
-                <el-form :rules="rules" ref="fromV" :model="ruleForm">
+                <el-form :rules="rules" ref="fromV" :model="loginForm">
                   <el-form-item prop="phoneNumber">
                     <el-input
-                      v-model="ruleForm.phoneNumber"
+                      v-model="loginForm.phoneNumber"
                       placeholder="请输入手机号码"
                     ></el-input>
                   </el-form-item>
                   <el-form-item prop="confirmSMS">
                     <el-input
-                      v-model="ruleForm.confirmSMS"
+                      v-model="loginForm.confirmSMS"
                       placeholder="请输入验证码"
                       type="text"
                     >
@@ -124,7 +124,7 @@
                     ></el-checkbox>
                   </el-form-item>
                   <el-form-item size="large">
-                    <el-button type="primary" style="width: 100%" :disabled='!isAgree'
+                    <el-button type="primary" style="width: 100%" :disabled='!isAgree' @click="login"
                       >登录</el-button
                     >
                   </el-form-item>
@@ -178,9 +178,9 @@
                       placeholder="请输入手机号码"
                     ></el-input>
                   </el-form-item>
-                  <el-form-item prop="confirm">
+                  <el-form-item prop="confirmSMS">
                     <el-input
-                      v-model="ruleForm.confirm"
+                      v-model="ruleForm.confirmSMS"
                       placeholder="请输入验证码"
                       type="password"
                     >
@@ -232,9 +232,9 @@
                       placeholder="请输入手机号码"
                     ></el-input>
                   </el-form-item>
-                  <el-form-item prop="confirm">
+                  <el-form-item prop="confirmSMS">
                     <el-input
-                      v-model="ruleForm.confirm"
+                      v-model="ruleForm.confirmSMS"
                       placeholder="请输入验证码"
                       type="password"
                     >
@@ -296,9 +296,9 @@
                   type="password"
                 ></el-input>
               </el-form-item>
-              <el-form-item prop="confirm">
+              <el-form-item prop="confirmSMS">
                 <el-input
-                  v-model="ruleForm.confirm"
+                  v-model="ruleForm.confirmSMS"
                   placeholder="请输入验证码"
                   type="password"
                 >
@@ -322,7 +322,7 @@
                 ></el-checkbox>
               </el-form-item>
               <el-form-item size="large">
-                <el-button type="primary" style="width: 100%" :disabled='!isAgree'
+                <el-button type="primary" style="width: 100%" :disabled='!isAgree' @click="toRegister"
                   >注册并登录</el-button
                 >
               </el-form-item>
@@ -347,7 +347,8 @@ import {
   toRefs,
 } from "@vue/runtime-core";
 import { ElMessageBox } from "element-plus";
-import { sendSMS } from "@/service/api";
+import { sendSMS, register, loginByPassword, loginByVercode, getUserInfo } from "@/service/api";
+import { ElMessage } from 'element-plus'
 // import MyInput from './input.vue'
 
 export default defineComponent({
@@ -355,17 +356,23 @@ export default defineComponent({
   // components: {
   //   MyInput
   // },
-  setup() {
+  props: [],
+  setup(props, context) {
     const dialogVisible = ref(false);
     const rotate = ref(false);
     let fromV = ref(null);
     const carousel = ref();
     const carousel2 = ref();
     const isAgree = ref(false)
+    const loginForm = reactive({
+      phoneNumber: sessionStorage.getItem('phone') || '',
+      password: '',
+      confirmSMS: ''
+    })
     const ruleForm = reactive({
-      phoneNumber: "15602329916",
+      phoneNumber: "",
       password: "",
-      confirm: "",
+      confirmSMS: "",
     });
     const rules = {
       phoneNumber: [
@@ -395,7 +402,7 @@ export default defineComponent({
     const isLogin = ref(true);
     // 关闭弹窗
     const handleClose = (done) => {
-      ElMessageBox.confirm("Are you sure to close this dialog?")
+      ElMessageBox.confirm("是否关闭弹窗？")
         .then(() => {
           done();
         })
@@ -411,19 +418,105 @@ export default defineComponent({
         : carousel.value.prev();
     };
 
+
+    // 获取个人信息
+    const _getUserInfo = () => {
+      getUserInfo().then(({code, data:{username, phone, email, gender, birthday, headportrait}}) => { 
+        if(code === 3200) {
+          sessionStorage.setItem('username', username || '')
+          sessionStorage.setItem('phoneNumber', phone || '')
+          sessionStorage.setItem('email', email || '')
+          sessionStorage.setItem('gender', gender || '男')
+          sessionStorage.setItem('birthday', birthday || '2021-01-01')
+          sessionStorage.setItem('headportrait', headportrait || '../assets/image/head1')
+        }
+      })
+    }
+
     const getConfirm = () => {
       const endTime = new Date().getTime() + 60 * 1000;
       localStorage.setItem("endTime", endTime);
       // console.log(endTime);
       getConfirmTime();
       buttonStatus.value = true;
+      _sendSMS()
+
     };
     // 获取验证码
     const _sendSMS = () => {
       sendSMS(ruleForm.phoneNumber)
     }
-      _sendSMS()
 
+    // 注册帐号
+    const toRegister = () => {
+      // console.log(ruleForm)
+      _register(ruleForm)
+    }
+
+    const _register = (form) => {
+      register({
+        phone: form.phoneNumber,
+        username: form.phoneNumber,
+        password: form.password,
+        vercode: form.confirmSMS
+      }).then(({code}) => {
+        if(code === 3200) {
+          _loginByPassword(ruleForm)
+        }
+      })
+    }
+
+    // 手机密码登录
+    const _loginByPassword = (form) => {
+      loginByPassword({
+        phone: form.phoneNumber,
+        password: form.password
+      }).then(({data:{code, token}}) => {
+        // console.log(code, token);
+        if(code === 3200) {
+          sessionStorage.setItem('_TOKEN', token)
+          dialogVisible.value = false
+          ElMessage.success('success')
+          context.emit('getStatus', false)
+          _getUserInfo()
+        }else {
+          ElMessage.warning('登录失败，请检查账号密码是否正确!')
+        }
+      })
+    }
+
+    // 手机验证码登录
+    const _loginByVercode = (form) => {
+      ElMessage.closeAll()
+      loginByVercode({
+        phone: form.phoneNumber,
+        vercode: form.confirmSMS
+      }).then(({data: {code, token}}) => {
+        if(code === 3200) {
+          sessionStorage.setItem('_TOKEN', token)
+          dialogVisible.value = false
+          ElMessage.success('success')
+          context.emit('getStatus', false)
+          _getUserInfo()
+        } else{
+          ElMessage.warning('登录失败，请检查账号验证码是否正确!')
+        }
+      })
+    }
+
+    const login = () => {
+      // console.log(loginType);
+      sessionStorage.setItem('phone', loginForm.phoneNumber)
+      if(loginType.value === tabName[0]){
+        _loginByPassword(loginForm)
+      }else {
+        // console.log(1);
+        _loginByVercode(loginForm)
+      }
+
+    }
+
+    // 验证码倒计时
     const getConfirmTime = () => {
       const endTime = localStorage.getItem("endTime");
       confirmTime.value = Math.ceil((endTime - new Date().getTime()) / 1000);
@@ -464,6 +557,7 @@ export default defineComponent({
     });
     return {
       dialogVisible,
+      loginForm,
       ruleForm,
       rotate,
       // username,
@@ -482,7 +576,9 @@ export default defineComponent({
       carousel2,
       isLogin,
       findPassword,
-      isAgree
+      isAgree,
+      toRegister,
+      login
     };
   },
 });

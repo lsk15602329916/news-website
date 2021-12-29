@@ -11,15 +11,22 @@
           active-value="light"
           inactive-value="dark"
         />
-        <LoginDialog></LoginDialog>
-        <v-icon
-          :size='40'
-          color="green darken-2"
-          style="cursor: pointer; "
-          @click="toHomepage"
-        >
-          mdi-account-circle
-        </v-icon>
+        <LoginDialog  v-if="loginStatus" @getStatus='getStatus'></LoginDialog>
+        <el-dropdown v-else>
+          <v-icon 
+            :size='40'
+            color="green darken-2"
+            style="cursor: pointer; "
+          >
+            mdi-account-circle
+          </v-icon>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item @click="toHomepage">个人中心</el-dropdown-item>
+              <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </div>
       <div class="banner">
         <div class="figure">
@@ -53,9 +60,6 @@
           ———————————————— 到底啦！ ————————————————
         </div>
       </div>
-    </div>
-    <div class="header">
-      <LoginDialog></LoginDialog>
     </div>
   </div>
 </template>
@@ -133,10 +137,20 @@ export default {
     ];
     return {
       newsItems,
+      loginStatus: true,
       f: "bg-dark",
     };
   },
   methods: {
+    getStatus(flag) {
+      // console.log(flag)
+      this.loginStatus = flag
+    },
+    // 退出登录
+    logout() {
+      this.loginStatus = true
+      sessionStorage.removeItem("_TOKEN")
+    },
     toggle(e) {
       console.log("e: ", e);
       this.$store.commit("setTheme", e);
@@ -159,8 +173,11 @@ export default {
     }
   },
   mounted() {
-    console.log("mounted", this);
+    // console.log("mounted", this);
     this.$vuetify.theme.themes.light.primary = "red";
+    if(sessionStorage.getItem('_TOKEN')) {
+      this.loginStatus = false
+    }
   },
   computed: {
     theme() {
