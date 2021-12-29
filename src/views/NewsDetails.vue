@@ -394,6 +394,8 @@ export default {
       window.addEventListener('storage', (e) => {
         if(e.key && e.key == '_TOKEN') {
           Utils.update('loginStatus', Boolean(e.newValue))
+        } else if(e.key && e.key == 'theme') {
+          Utils.update('theme', e.newValue)
         }
       })
     })

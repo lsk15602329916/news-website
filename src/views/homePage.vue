@@ -1,5 +1,5 @@
 <template>
-  <div class="bg">
+  <div :class="$store.state.theme === 'light' ? 'bg' : 'dark-bg'">
       <el-container class="container">
     <el-header height="110px">
       <el-row>
@@ -313,6 +313,11 @@ export default {
       _getHistory()
       _getFavList()
       _getUserInfo()
+      window.addEventListener('storage', (e) => {
+        if(e.key && e.key == 'theme') {
+          Utils.update('theme', e.newValue)
+        }
+      })
     })
 
     return {
@@ -339,7 +344,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 .bg {
   height: 100%;
   background: rgb(255, 228, 249);
@@ -349,6 +354,15 @@ export default {
     rgba(205, 217, 252, 0.8) 100%
   );
   box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.4);
+}
+
+.dark-bg {
+  background: #212121;
+  min-height: 100vh;
+  --el-text-color-primary: white
+  .el-divider__text {
+    color: black
+  }
 }
 
 .container {
@@ -456,6 +470,6 @@ export default {
 }
 
 .content:hover {
-  color: red;
+  color: rgb(158, 207, 207);
 }
 </style>

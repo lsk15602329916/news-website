@@ -163,8 +163,7 @@ export default {
       localStorage.removeItem("_TOKEN")
     },
     toggle(e) {
-      console.log("e: ", e);
-      console.log(this.f);
+      localStorage.setItem('theme', e)
       this.$store.commit("setTheme", e);
     },
     selectNewsType(item) {
