@@ -200,7 +200,7 @@
                     >
                   </el-form-item>
                   <div class="flex">
-                    <el-link type="primary" @click="isLogin = !isLogin"
+                    <el-link type="primary" @click="isLogin = !isLogin; loginType = '密码登录'"
                       >登录</el-link
                     >
                   </div>
@@ -540,6 +540,7 @@ export default defineComponent({
       progress.value = tabName2[1];
       carousel2.value.next();
     };
+
     // const submitForm = async () => {
     //   const form = unref(fromV);
     //   if (!form) return
