@@ -370,7 +370,11 @@ export default defineComponent({
       confirmSMS: ''
     })
     const ruleForm = reactive({
+<<<<<<< HEAD
       phoneNumber: "",
+=======
+      phoneNumber: "18319328003",
+>>>>>>> b8f80c8840cd2ed3bcf031cb68b7e78f75dd88c2
       password: "",
       confirmSMS: "",
     });
@@ -443,8 +447,8 @@ export default defineComponent({
 
     };
     // 获取验证码
-    const _sendSMS = () => {
-      sendSMS(ruleForm.phoneNumber)
+    const _sendSMS = async () => {
+      await sendSMS(ruleForm.phoneNumber)
     }
 
     // 注册帐号

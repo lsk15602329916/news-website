@@ -38,6 +38,15 @@ export async function sendSMS(phoneNumber) {
             phoneNumber
         }
     })
+<<<<<<< HEAD
+=======
+    // return request({
+    //   url: OPT.SENDSMS,
+    //   params: {
+    //     phoneNumber
+    //   }
+    // })
+>>>>>>> b8f80c8840cd2ed3bcf031cb68b7e78f75dd88c2
 }
 
 export async function getComments(params) {
