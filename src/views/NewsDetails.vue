@@ -269,7 +269,9 @@ export default {
         count
       })
 
-      if(!comments.data.has_more) {
+      if(!comments.data.has_more && !show) {
+        newsCom.value.data.comments = []
+        console.log(123);
         Utils.showErrorAlert('没有更多了')
         return;
       }
@@ -433,6 +435,11 @@ export default {
   .test img {
     display: inline-block;
     width: 100%;
+  }
+  .test p {
+    text-indent: 2rem;
+    margin: 10px 0;
+    line-height: 26px;
   }
 </style>
 
