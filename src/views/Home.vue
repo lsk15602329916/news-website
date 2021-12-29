@@ -70,9 +70,6 @@
         <div class="news-box">
           <router-view />
         </div>
-        <div class="bottom-line">
-          ———————————————— 到底啦！ ————————————————
-        </div>
       </div>
     </div>
   </div>
@@ -347,13 +344,5 @@ export default {
 .news-box {
   width: 100%;
 }
-.bottom-line {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 4rem;
-  width: 100%;
-  text-align: center;
-  color: gray;
-}
+
 </style>
