@@ -11,7 +11,21 @@
           active-value="light"
           inactive-value="dark"
         />
-        <LoginDialog  v-if="loginStatus" @getStatus='getStatus'></LoginDialog>
+        <el-button
+          v-if="!$store.state.loginStatus"
+          size="small"
+          @click="openLoginDialig"
+          style="
+            --el-button-bg-color: rgb(176, 190, 252);
+            --el-button-border-color: rgb(176, 190, 252);
+            --el-button-hover-bg-color: rgb(100, 126, 243);
+            --el-button-hover-border-color: rgb(100, 126, 243);
+            --el-button-active-bg-color: rgb(100, 126, 243);
+            --el-button-active-border-color: rgb(100, 126, 243);
+            color: white;
+          "
+          >登录</el-button
+        >
         <el-dropdown v-else>
           <v-icon 
             :size='40'
@@ -56,9 +70,6 @@
         <div class="news-box">
           <router-view />
         </div>
-        <div class="bottom-line">
-          ———————————————— 到底啦！ ————————————————
-        </div>
       </div>
     </div>
   </div>
@@ -67,11 +78,10 @@
 <script>
 import NewsNavigator from "./NewsNavigator.vue";
 import NewsList from "./NewsList.vue";
-import LoginDialog from '../components/loginDialog.vue'
 import Utils from '@/utils';
 export default {
   name: "Home",
-  components: { NewsNavigator, NewsList, LoginDialog },
+  components: { NewsNavigator, NewsList },
   data() {
     const newsItems = [
       { text: "推荐", active: true, icon: "all.png", tag: "__all__" },
@@ -138,23 +148,23 @@ export default {
     return {
       newsItems,
       loginStatus: true,
-      f: "bg-dark",
+      f: localStorage.getItem('theme'),
     };
   },
   methods: {
-    getStatus(flag) {
-      // console.log(flag)
-      this.loginStatus = flag
-    },
+    // getStatus(flag) {
+    //   // console.log(flag)
+    //   this.loginStatus = flag
+    // },
     // 退出登录
     logout() {
-      this.loginStatus = true
-      sessionStorage.removeItem("_TOKEN")
-      sessionStorage.removeItem("userid")
-
+      // this.loginStatus = true
+      Utils.update(['loginStatus', 'token'], [false, ''])
+      localStorage.removeItem("_TOKEN")
     },
     toggle(e) {
       console.log("e: ", e);
+      console.log(this.f);
       this.$store.commit("setTheme", e);
     },
     selectNewsType(item) {
@@ -172,14 +182,24 @@ export default {
         //   group_id: group_id
         // }
       )
+    },
+    openLoginDialig() {
+      Utils.update('dialogVisible', true)
     }
   },
   mounted() {
     // console.log("mounted", this);
     this.$vuetify.theme.themes.light.primary = "red";
-    if(sessionStorage.getItem('_TOKEN')) {
-      this.loginStatus = false
+    if(localStorage.getItem('_TOKEN')) {
+      // this.loginStatus = true
+      Utils.update('loginStatus', true)
     }
+    window.addEventListener('storage', (e) => {
+      console.log(e);
+      if(e.key && e.key == '_TOKEN') {
+        Utils.update('loginStatus', Boolean(e.newValue))
+      }
+    })
   },
   computed: {
     theme() {
@@ -189,7 +209,7 @@ export default {
   watch: {
     theme: {
       handler(newVal, oldVal) {
-        console.log("newVal: ", newVal);
+        console.log(newVal, oldVal);
         localStorage.setItem("theme", newVal);
       },
     },
@@ -324,13 +344,5 @@ export default {
 .news-box {
   width: 100%;
 }
-.bottom-line {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 4rem;
-  width: 100%;
-  text-align: center;
-  color: gray;
-}
+
 </style>

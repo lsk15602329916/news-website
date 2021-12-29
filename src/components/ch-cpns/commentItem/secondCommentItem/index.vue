@@ -16,7 +16,7 @@
     </v-avatar>
     <span class="ml-2">{{ user.name }}</span>
     <v-spacer></v-spacer>
-    <span class="pt-1 ml-2">{{ comment.favCount || 0 }}</span>
+    <span class="mt-2 ml-2">{{ comment.favCount || 0 }}</span>
     <v-btn
       size="x-small"
       flat
@@ -31,14 +31,18 @@
     </v-btn>
   </div>
   <p class="pl-2">{{ comment.text }}</p>
-  <v-btn
-    class="ml-2"
-    flat
-    size="xx-small"
-    @click="showInput"
-  >
-    <span class="text-caption">回复</span>
-  </v-btn>
+  <div class="d-flex">
+    <v-btn
+      class="ml-2"
+      flat
+      size="xx-small"
+      @click="showInput"
+    >
+      <span class="text-caption">回复</span>
+    </v-btn>
+    <v-spacer></v-spacer>
+    <div class="text-caption mr-3">{{ comment.createdAt?.slice(0, 19).split('T').join(' ') }}</div>
+  </div>
   <text-input 
     v-if="show"
     @update-comment="updateComment"
@@ -78,10 +82,14 @@ export default {
     let show = ref(false)
     const fav = async () => {
       await favComment({
-        user_id: store.state.user.id,
+        // user_id: store.state.user.id,
         comment_id: props.comment._id
       }).then(res => {
-        context.emit('update-second-fav', res.data)
+        if(res.code === 401 || res.data === null) {
+          Utils.showErrorAlert('请先登录')
+        } else {
+          context.emit('update-second-fav', res.data)
+        }
       }).catch(err => {
         console.log(err);
       })

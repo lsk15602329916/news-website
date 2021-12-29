@@ -12,7 +12,7 @@ export default function request(config) {
 
     instance.interceptors.request.use(
         config => {
-            config.headers['Authorization'] = sessionStorage.getItem('_TOKEN')
+            config.headers['Authorization'] = localStorage.getItem('_TOKEN')
             return config
         },
         error => {
@@ -23,10 +23,12 @@ export default function request(config) {
     // http response 拦截器
     instance.interceptors.response.use(
         response => {
-            //拦截响应，做统一处理
+            Utils.update('loading', false)
+                //拦截响应，做统一处理
             Utils.update('loading', false)
             if (response.data.code === 401) {
-                sessionStorage.removeItem('_TOKEN')
+                Utils.update('token', '')
+                localStorage.removeItem('_TOKEN')
             }
             return response.data
         },

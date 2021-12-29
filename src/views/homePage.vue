@@ -10,7 +10,7 @@
           <div class="f-24">{{formMessage.name}}</div>
           <div class="flex flex-row justity-st">
             <div class="mr-10">点赞 {{likeCount}}</div>
-            <div class="mr-10">收藏 0</div>
+            <div class="mr-10">收藏 {{favNewsCount}}</div>
             <div>历史 {{historyCount}}</div>
           </div>
         </el-col>
@@ -20,7 +20,7 @@
       <el-tabs v-model="activeName">
         <el-tab-pane label="个人信息" name="个人信息">
           <el-form ref="form" :model="formMessage" label-width="120px" style="width:500px; margin-top:10px" :rules='formRules'>
-            <el-form-item label="头像" prop='head'>
+            <!-- <el-form-item label="头像" prop='head'> -->
               <!-- <el-upload
                 class="avatar-uploader"
                 id='fileInput'
@@ -32,8 +32,8 @@
                 <img v-if="imageUrl" :src="imageUrl" class="avatar" />
                 <el-icon v-else class="avatar-uploader-icon"><plus /></el-icon>
               </el-upload> -->
-              <input type="file" id="fileInput" @change="beforeAvatarUpload"/>
-            </el-form-item>
+              <!-- <input type="file" id="fileInput" @change="beforeAvatarUpload"/>
+            </el-form-item> -->
             <el-form-item label="昵称" prop='name'>
               <el-input v-model="formMessage.name" :disabled='formLock'></el-input>
             </el-form-item>
@@ -60,32 +60,17 @@
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="收藏列表" name="收藏列表">
-          <el-row v-for="(item) in newsList" :key="item.newsId" class="news">
-            <el-col :span="5">
-              <div class="block">
-                <el-image
-                  style="width: 200px; height: 150px"
-                  :src="item.src"
-                  fit
-                >
-                  <template #error>
-                    <div class="image-slot">
-                      <el-icon :size='20'><component is="i-picture"></component></el-icon>
-                    </div>
-                  </template>
-                </el-image>
-              </div>
-            </el-col>
-            <el-col :span="15" :offset="1"  class="flex flex-column justify-sb">
-                <div class="title">
-                    {{item.title}}
-                </div>
-                <div class="content">
-                    {{item.content}}
-                </div>
-            </el-col>
-            <el-divider></el-divider>
-          </el-row>
+          <div v-for="(item, i) in favNewsList" :key="item.news_id" @click="open(item.news_id)" class="content"> 
+            <el-row :gutter="20" >
+              <el-col :span="24"><div class="title">{{item.title}}</div></el-col>
+            </el-row>
+            <el-row :gutter="20"  style="margin-top:20px">
+              <el-col :span="4"><div>{{item.author}}</div></el-col>
+              <el-col :offset="14" :span="6">{{getTimeStr(item.createdAt)}}</el-col>
+            </el-row>
+            <el-divider v-if="i < favCount - 1" border-style="dashed"></el-divider>
+            <el-divider v-else border-style="dashed">到底啦！！</el-divider>
+          </div>
         </el-tab-pane>
         <el-tab-pane label="点赞列表" name="点赞列表">
           <el-row :gutter="20" v-for="(item, i) in commentlist" :key="item.commentid">
@@ -96,7 +81,7 @@
           </el-row>
         </el-tab-pane>
         <el-tab-pane label="浏览记录" name="浏览记录">
-          <div v-for="(item, i) in historyList" :key="item.item_id" @click="open(item)" class="content"> 
+          <div v-for="(item, i) in historyList" :key="item.item_id" @click="open(item.item_id)" class="content"> 
             <el-row :gutter="20" >
               <el-col :span="24"><div class="title">{{item.title}}</div></el-col>
             </el-row>
@@ -104,7 +89,7 @@
               <el-col :span="4"><div>{{item.author}}</div></el-col>
               <el-col :offset="14" :span="6">{{getTimeStr(item.createdAt)}}</el-col>
             </el-row>
-            <el-divider v-if="i < likeCount - 1" border-style="dashed"></el-divider>
+            <el-divider v-if="i < historyCount - 1" border-style="dashed"></el-divider>
             <el-divider v-else border-style="dashed">到底啦！！</el-divider>
           </div>
         </el-tab-pane>
@@ -119,7 +104,7 @@ import { onMounted, reactive, ref } from 'vue-demi';
 import { Plus } from '@element-plus/icons-vue'
 // import { IconPicture } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
-import { uploadUserInfo, getLikeList, getHistory } from "@/service/api";
+import { uploadUserInfo, getLikeList, getHistory, getUserInfo, getFavList } from "@/service/api";
 import InspireCloud from '@byteinspire/js-sdk'
 import Utils from "@/utils";
 
@@ -132,12 +117,12 @@ export default {
   // http://img.zcool.cn/community/0165cb5d14565ca8012155290a6d86.png@1280w_1l_2o_100sh.png
   setup() {
     const formMessage = reactive({
-      head: sessionStorage.getItem("headportrait"),
-      name: sessionStorage.getItem("username"),
-      phoneNumber: sessionStorage.getItem("phoneNumber"),
-      sex: sessionStorage.getItem("gender"),
-      birth: sessionStorage.getItem("birthday"),
-      email: sessionStorage.getItem("email")
+      head: localStorage.getItem("headportrait"),
+      name: localStorage.getItem("username"),
+      phoneNumber: localStorage.getItem("phoneNumber"),
+      sex: localStorage.getItem("gender"),
+      birth: localStorage.getItem("birthday"),
+      email: localStorage.getItem('email')
     })
     const imageUrl = ref('')
     const formRules = {
@@ -157,8 +142,10 @@ export default {
 
     const commentlist = reactive([])
     const historyList = reactive([])
+    const favNewsList = reactive([])
     const historyCount = ref(0)
     const likeCount = ref(0)
+    const favNewsCount = ref(0)
     const activeName = ref('个人信息')
     const newsList = reactive([
       {
@@ -252,7 +239,9 @@ export default {
         phone: form.phoneNumber,
         headportrait: 'http://img.zcool.cn/community/0165cb5d14565ca8012155290a6d86.png@1280w_1l_2o_100sh.png'
       }).then((res) => {
-        console.log(res);
+        // console.log(res);
+        _getUserInfo()
+        formLock.value = true
       })
     }
 
@@ -267,6 +256,16 @@ export default {
       })
     } 
 
+    // 获取收藏列表
+    const _getFavList = () => {
+      getFavList().then(({code, data: {favlist}}) => {
+        if(code === 3200) {
+          favNewsList.push(...favlist)
+          favNewsCount.value = favlist.length
+        }
+      })
+    }
+
     const _getHistory = () => {
       getHistory().then(({code, data: {hislist}}) => {
         if(code === 3200) {
@@ -277,21 +276,43 @@ export default {
     }
 
     const getTimeStr = (time) => {
-      return formatTime(new Date(time).getTime())
+      return formatTime(new Date(time).getTime() + 8*60*60*1000)
     }
 
+    const _getUserInfo = () => {
+      getUserInfo().then(({code, data:{username, phone, email, gender, birthday, headportrait}}) => { 
+        if(code === 3200) {
+          Utils.update('user', {
+            username: username || '',
+            phoneNumber: phone || '',
+            email: email || '',
+            gender: gender || '男',
+            birthday: birthday || '2021-01-01',
+            headportrait: headportrait || '../assets/image/head1'
+          })
+          localStorage.setItem('username', username || '')
+          localStorage.setItem('phoneNumber', phone || '')
+          localStorage.setItem('email', email || '')
+          localStorage.setItem('gender', gender || '男')
+          localStorage.setItem('birthday', birthday || '2021-01-01')
+          localStorage.setItem('headportrait', headportrait || '../assets/image/head1')
+        }
+      })
+    }
     // 跳转详情页
-    const open = (item) => {
+    const open = (id) => {
       // console.log(item);
-      const { item_id } = item;
+      // const { item_id } = item;
       Utils.openTag(`NewsDetails`, {
-        item_id: item_id,
+        item_id: id,
       });
     }
 
     onMounted(() => {
       _getLikeList()
       _getHistory()
+      _getFavList()
+      _getUserInfo()
     })
 
     return {
@@ -305,6 +326,8 @@ export default {
       commentlist,
       historyList,
       historyCount,
+      favNewsList,
+      favNewsCount,
       handleAvatarSuccess,
       beforeAvatarUpload,
       uploadData,

@@ -12,7 +12,8 @@
       </v-avatar>
       <span class="ml-2">{{ comment.user.name }}</span>
       <v-spacer></v-spacer>
-      <span class="pt-1 ml-2">{{ comment.favCount || 0 }}</span>
+      
+      <span class="mt-1 ml-2">{{ comment.favCount || 0 }}</span>
       <v-btn
         size="x-small"
         icon
@@ -28,17 +29,20 @@
     </div>
     <v-card-text class="pt-0 pl-12">
       <p>{{ comment.text }}</p>
-      <v-btn @click="showReplyInput" size="x-small" flat class="text-caption">回复</v-btn>
-
-      <v-btn 
-        v-if="comment.reply_data.reply_list.length" 
-        flat 
-        size="x-small" 
-        style="color: #00BCD4"
-        @click="showSecondComment"
-      >
-        查看回复 <v-icon size="xx-small">{{`mdi-chevron-${secondComment ? 'up' : 'down'}`}}</v-icon>
-      </v-btn>
+      <div class="d-flex">
+        <v-btn @click="showReplyInput" size="x-small" flat class="text-caption">回复</v-btn>
+        <v-btn 
+          v-if="comment.reply_data.reply_list.length" 
+          flat 
+          size="x-small" 
+          style="color: #00BCD4"
+          @click="showSecondComment"
+        >
+          查看回复 <v-icon size="xx-small">{{`mdi-chevron-${secondComment ? 'up' : 'down'}`}}</v-icon>
+        </v-btn>
+        <v-spacer></v-spacer>
+        <div class="text-caption mr-3">{{ comment.createdAt?.slice(0, 19).split('T').join(' ') }}</div>
+      </div>
 
       <div v-show="secondComment">
         <second-comment-item
@@ -69,6 +73,7 @@ import { useStore } from 'vuex';
 import textInput from './textInput';
 import secondCommentItem from './secondCommentItem';
 import { favComment } from '@/service/api';
+import Utils from '@/utils';
 export default {
   props: {
     comment: {
@@ -92,10 +97,14 @@ export default {
 
     const fav = async () => {
       await favComment({
-        user_id: store.state.user.id,
+        // user_id: store.state.user.id,
         comment_id: props.comment._id
       }).then(res => {
-        context.emit('update-fav', res.data)
+        if(res.code === 401 || res.data === null) {
+          Utils.showErrorAlert('请先登录')
+        } else {
+          context.emit('update-fav', res.data)
+        }
       }).catch(err => {
         console.log(err);
       })

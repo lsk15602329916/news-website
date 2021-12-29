@@ -1,6 +1,7 @@
 export const GETNEWS = '/getNews'
 export const GETNEWSDETAILS = '/getNewsDetails'
 export const GETNEWSCOMMENTS = '/getNewsComments'
+export const LIKENEWS = '/likeNews'
 
 // 获取验证码
 export const SENDSMS = '/verifyPhone'
@@ -29,3 +30,6 @@ export const GETLIKELIST = '/getLikeList'
 
 // 获取历史记录
 export const GETHISTORY = '/getHistory'
+
+// 获取收藏列表
+export const GETFAVLIST = '/getFavList'

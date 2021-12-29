@@ -26,6 +26,19 @@ export async function getNewsComments(params) {
     })
 }
 
+export async function likeNews(item_id) {
+    return request({
+        url: OPT.LIKENEWS,
+        method: 'POST',
+        data: {
+            item_id
+        },
+        headers: {
+            'content-type': 'application/json'
+        },
+    })
+}
+
 // 获取验证码
 export async function sendSMS(phoneNumber) {
     return request({
@@ -134,10 +147,18 @@ export async function getLikeList(params) {
     })
 }
 
-// 获取点赞列表
+// 获取历史记录
 export async function getHistory(params) {
     return request({
         url: OPT.GETHISTORY,
+        params
+    })
+}
+
+// 获取收藏列表
+export async function getFavList(params) {
+    return request({
+        url: OPT.GETFAVLIST,
         params
     })
 }

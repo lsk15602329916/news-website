@@ -15,7 +15,6 @@ export default {
   name: "NewsList",
   components: { newsItem },
   data() {
-    console.log("data", this.$router);
     return {
       topic: this.$router,
       newsList: [],
@@ -31,7 +30,6 @@ export default {
   },
   watch: {
     $route() {
-      // console.log("route改变了", this, this.$route.params.tag);
       Utils.update("loading", true);
       this.tag = this.$route.params.tag;
       axios
@@ -83,7 +81,6 @@ export default {
             ? res.data.image_list[0]
             : image_url
           : null;
-        console.log(this.newsList);
       })
       .catch((err) => {
         console.log(err);
@@ -123,7 +120,7 @@ export default {
   transform: translateX(-50%);
   width: 60%;
   height: 1px;
-  background: linear-gradient(to right, white, rgba(34, 34, 34, 0.609), white);
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(34, 34, 34, 0.609), rgba(255, 255, 255, 0));
 }
 .news-item-dark {
   margin: 10px;

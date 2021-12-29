@@ -7,79 +7,105 @@
     <v-row>
       <v-col cols="2">
       </v-col>
-      <v-col cols="8" v-show="newsDetails.data">
-        <h1 v-html="newsDetails.data?.title" class="title-style"></h1>
-        <div class="father">
-          <span class="son" v-html="newsTime  +  '&nbsp' + '&nbsp' + '&nbsp'+ '&nbsp'+ '&nbsp'+ ' 来源：' + newsDetails.data?.source" > </span>
-        </div>
-        <div v-html="newsDetails.data?.content" class="test"></div>
-        <v-divider class="my-5" :theme="$store.state.theme"></v-divider>
-        <!-- <p class="font-weight-bold my-2">精彩评论</p> -->
-        <v-item-group class="d-flex" mandatory>
-          <v-item v-slot="{ isSelected, toggle }">
-            <v-card
-              :color="isSelected || isFirstShow ? 'orange' : ''"
-              class="d-flex align-center px-2"
-              flat
-              dark
-              @click="changeComment(toggle, 0)"
-            >
-              <v-scroll-y-transition>
-                <div
-                  class="font-weight-bold my-2"
-                >
-                  精彩评论
-                </div>
-              </v-scroll-y-transition>
-            </v-card>
-          </v-item>
-          <v-divider vertical class="mx-1" :theme="$store.state.theme"></v-divider>
-          <v-item v-slot="{ isSelected, toggle }">
-            <v-card
-              :color="isSelected ? 'orange' : ''"
-              class="d-flex align-center px-2"
-              flat
-              dark
-              @click="changeComment(toggle, 1)"
-            >
-              <v-scroll-y-transition>
-                <div
-                  class="font-weight-bold my-2"
-                >
-                  其他评论
-                </div>
-              </v-scroll-y-transition>
-            </v-card>
-          </v-item>
-        </v-item-group>
-        <div>
-          <text-input
-            class="my-3"
-            @update-comment="updateComment"
-          />
-          <comment-item
-            v-for="item in newsComments.data?.comments"
-            @update-fav="updateFav($event, item)"
-            :key="item.id"
-            @update-com="updateComment"
-            :comment="item"
-          />
-          <v-btn v-if="newsComments.data?.has_more" @click="showAllComments(1)" block :theme="$store.state.theme">
-            <span class="grey--text">查看全部评论 >></span>
-          </v-btn>
-        </div>
-        <v-divider class="my-5" :theme="$store.state.theme"></v-divider>
-        <p class="font-weight-bold my-2">热门推荐</p>
-        <div>
-          <news-item
-            v-for="item in news"
-            :key="item.item_id"
-            :news="item"
-          />
+      <v-col cols="8">
+        <div v-show="newsDetails.data">
+          <h1 v-html="newsDetails.data?.title" class="title-style"></h1>
+          <div class="father">
+            <span class="son" v-html="newsTime  +  '&nbsp' + '&nbsp' + '&nbsp'+ '&nbsp'+ '&nbsp'+ ' 来源：' + newsDetails.data?.source" > </span>
+          </div>
+          <div v-html="newsDetails.data?.content" class="test"></div>
+          <v-divider class="my-5" :theme="$store.state.theme"></v-divider>
+          <!-- <p class="font-weight-bold my-2">精彩评论</p> -->
+          <v-item-group class="d-flex" mandatory>
+            <v-item v-slot="{ isSelected, toggle }">
+              <v-card
+                :color="(isSelected || isFirstShow) && !showMYComment ? 'orange' : ''"
+                class="d-flex align-center px-2"
+                flat
+                dark
+                @click="changeComment(toggle, 0)"
+              >
+                <v-scroll-y-transition>
+                  <div
+                    class="font-weight-bold my-2"
+                  >
+                    精彩评论
+                  </div>
+                </v-scroll-y-transition>
+              </v-card>
+            </v-item>
+            <v-divider vertical class="mx-1" :theme="$store.state.theme"></v-divider>
+            <v-item v-slot="{ isSelected, toggle }">
+              <v-card
+                :color="isSelected || showMYComment ? 'orange' : ''"
+                class="d-flex align-center px-2"
+                flat
+                dark
+                @click="changeComment(toggle, 1)"
+              >
+                <v-scroll-y-transition>
+                  <div
+                    class="font-weight-bold my-2"
+                  >
+                    其他评论
+                  </div>
+                </v-scroll-y-transition>
+              </v-card>
+            </v-item>
+          </v-item-group>
+          <div>
+            <text-input
+              class="my-3"
+              @update-comment="updateComment"
+            />
+            <comment-item
+              v-for="item in newsComments.data?.comments"
+              @update-fav="updateFav($event, item)"
+              :key="item.id"
+              @update-com="updateComment"
+              :comment="item"
+            />
+            <v-btn v-if="newsComments.data?.has_more" @click="showAllComments(1)" block :theme="$store.state.theme">
+              <span class="grey--text">查看全部评论 >></span>
+            </v-btn>
+          </div>
+          <v-divider class="my-5" :theme="$store.state.theme"></v-divider>
+          <p class="font-weight-bold my-2">热门推荐</p>
+          <div>
+            <news-item
+              v-for="item in news"
+              :key="item.item_id"
+              :news="item"
+            />
+          </div>
         </div>
       </v-col>
       <v-col cols="2">
-
+        <div class="aside" v-show="newsDetails.data">
+          <div>
+            <v-btn
+              icon
+              :theme="$store.state.theme"
+              @click="like"
+            >
+              <v-icon>
+                {{ `mdi-thumb-up${newsDetails.data?.like ? '' : '-outline'}` }}
+              </v-icon>
+            </v-btn>
+          </div>
+          <div>
+            <v-btn
+              icon
+              :theme="$store.state.theme"
+              class="mt-3"
+              @click="toTop"
+            >
+              <v-icon>
+                mdi-chevron-up
+              </v-icon>
+            </v-btn>
+          </div>
+        </div>
       </v-col>
     </v-row>
   </v-container>
@@ -87,7 +113,7 @@
     v-model="show"
     temporary
     disable-resize-watcher
-    width="400"
+    width="500"
     app
     :theme="$store.state.theme"
   >
@@ -163,7 +189,7 @@
 <script>
 import { useRoute } from "vue-router";
 import { useStore } from 'vuex';
-import { getNewsDetails, getNewsComments, getNews, getComments } from "@/service/api";
+import { getNewsDetails, getNewsComments, getNews, getComments, likeNews } from "@/service/api";
 import newsItem from "@/components/ch-cpns/newsItem";
 import commentItem from "@/components/ch-cpns/commentItem";
 import textInput from '@/components/ch-cpns/commentItem/textInput';
@@ -191,8 +217,10 @@ export default {
     let news = ref([])
     let isFirstShow = ref(true)
     let isAllFirstShow = ref(true)
+    let isMYCommentFirstShow = ref(true)
     const win = ref(null)
     let show = ref(false)
+    let showMYComment = ref(false)
     let newsTime = ref('')
 
     const _getNewsDetails = async () => {
@@ -212,7 +240,6 @@ export default {
       if (minute < 10) { minute = '0' + minute }
       if (second < 10) { second = '0' + second }
       newsTime.value =  year + '年' + month + '月' + date + '日' + ' ' + hours + ':' + minute + ':' + second
-      console.log(newsTime)
       }
 
     const _getNewsComments = async (newsCom, offset, count) => {
@@ -237,7 +264,7 @@ export default {
     const _getComments = async (newsCom, offset, count) => {
       let comments = await getComments({
         item_id: route.params.item_id,
-        user_id: store.state.user.id,
+        // user_id: store.state.user.id,
         offset: offset?.value,
         count
       })
@@ -256,11 +283,13 @@ export default {
     }
 
     const updateComment = async () => {
+      showMYComment.value = true
       await _getComments(newsComments)
     }
 
     const changeComment = async (toggle, i) => {
       if(isFirstShow.value) isFirstShow.value = false
+      showMYComment.value = false
       toggle()
       if(i) {
         await _getComments(newsComments)
@@ -281,31 +310,32 @@ export default {
 
     const handleGetAllComments = async (fn, comments, offset, count) => {
       await fn(comments, offset, count)
+      allComments.value = comments.value
     }
 
     const showAllComments = async (flag) => {
       show.value = true
       // 第一次获取
       if(!curTTCommentCount.value) {
-        await handleGetAllComments(_getComments, allMYComments, curMYCommentCount, 10)
         await handleGetAllComments(_getNewsComments, allTTComments, curTTCommentCount, 10)
-        allComments.value = allTTComments.value
         return
       }
-      console.log(flag);
+      
       if(!flag) {
         if(curAllComment.value) {
           await handleGetAllComments(_getComments, allMYComments, curMYCommentCount, 10)
-          allComments.value = allMYComments.value
         } else {
           await handleGetAllComments(_getNewsComments, allTTComments, curTTCommentCount, 10)
-          allComments.value = allTTComments.value
         }
       }
     }
 
-    const changeAllComment = (toggle, i) => {
+    const changeAllComment = async (toggle, i) => {
       if(isAllFirstShow.value) isAllFirstShow.value = false
+      if(isMYCommentFirstShow.value) {
+        await handleGetAllComments(_getComments, allMYComments, curMYCommentCount, 10)
+        isMYCommentFirstShow.value = false
+      }
       curAllComment.value = i
       allComments.value = i ? allMYComments.value : allTTComments.value
       toggle()
@@ -315,7 +345,7 @@ export default {
       let idx = allMYComments.value.data.comments.findIndex(n => n._id === id)
       await getComments({
         item_id: route.params.item_id,
-        user_id: store.state.user.id,
+        // user_id: store.state.user.id,
         offset: idx,
         count: 1
       }).then(res => {
@@ -323,6 +353,29 @@ export default {
       }).catch(err => {
         console.log(err);
       })
+    }
+
+    const like = async () => {
+      if(!localStorage.getItem('_TOKEN')) {
+        Utils.update('dialogVisible', true)
+        return;
+      } else {
+        await likeNews(route.params.item_id).then(res => {
+          newsDetails.value.data.like = Boolean(res.data)
+        }).catch(err => {
+          console.log(err);
+        })
+      }
+    }
+
+    const toTop = () => {
+      const fn = () => {
+        document.documentElement.scrollTop -= 300
+        if(document.documentElement.scrollTop > 0) {
+          requestAnimationFrame(fn)
+        }
+      }
+      requestAnimationFrame(fn)
     }
 
     onMounted(() => {
@@ -335,6 +388,12 @@ export default {
       }
 
       window.addEventListener('scroll', Utils.debounce(scrollFn))
+
+      window.addEventListener('storage', (e) => {
+        if(e.key && e.key == '_TOKEN') {
+          Utils.update('loginStatus', Boolean(e.newValue))
+        }
+      })
     })
     
     _getNewsDetails()
@@ -358,7 +417,10 @@ export default {
       curTTCommentCount,
       curMYCommentCount,
       show,
-      allComments
+      allComments,
+      like,
+      toTop,
+      showMYComment
     };
   },
 };
@@ -392,7 +454,10 @@ export default {
     background: #212121;
   }
 
-
+  .aside {
+    position: fixed;
+    bottom: 100px;
+  }
   .btn {
     color: white;
   }

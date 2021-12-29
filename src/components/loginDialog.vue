@@ -1,24 +1,10 @@
 <template>
-  <el-button
-    size="small"
-    @click="dialogVisible = true"
-    style="
-      --el-button-bg-color: rgb(176, 190, 252);
-      --el-button-border-color: rgb(176, 190, 252);
-      --el-button-hover-bg-color: rgb(100, 126, 243);
-      --el-button-hover-border-color: rgb(100, 126, 243);
-      --el-button-active-bg-color: rgb(100, 126, 243);
-      --el-button-active-border-color: rgb(100, 126, 243);
-      color: white;
-    "
-    >登录</el-button
-  >
   <el-dialog
-    v-model="dialogVisible"
+    v-model="$store.state.dialogVisible"
     title="登录后内容更精彩"
-    width="40%"
+    width="50%"
     :before-close="handleClose"
-    class="dialog"
+    :custom-class="$store.state.theme === 'dark' ? 'dialog-dark' : ''"
     :center="true"
   >
     <div class="box" :class="rotate ? 'flip' : ''">
@@ -352,6 +338,7 @@ import { sendSMS, register, loginByPassword, loginByVercode, getUserInfo } from 
 import { ElMessage } from 'element-plus'
 import head1 from '@/assets/image/head1.png'
 
+import Utils from '@/utils';
 // import MyInput from './input.vue'
 
 export default defineComponent({
@@ -360,15 +347,16 @@ export default defineComponent({
   //   MyInput
   // },
   props: [],
+  emits: ['getStatus'],
   setup(props, context) {
-    const dialogVisible = ref(false);
+    // const dialogVisible = ref(false);
     const rotate = ref(false);
     let fromV = ref(null);
     const carousel = ref();
     const carousel2 = ref();
     const isAgree = ref(false)
     const loginForm = reactive({
-      phoneNumber: sessionStorage.getItem('phone') || '',
+      phoneNumber: localStorage.getItem('phone') || '',
       password: '',
       confirmSMS: ''
     })
@@ -426,12 +414,20 @@ export default defineComponent({
     const _getUserInfo = () => {
       getUserInfo().then(({code, data:{username, phone, email, gender, birthday, headportrait}}) => { 
         if(code === 3200) {
-          sessionStorage.setItem('username', username || '')
-          sessionStorage.setItem('phoneNumber', phone || '')
-          sessionStorage.setItem('email', email || '')
-          sessionStorage.setItem('gender', gender || '男')
-          sessionStorage.setItem('birthday', birthday || '2021-01-01')
-          sessionStorage.setItem('headportrait', headportrait || head1)
+          Utils.update('user', {
+            username: username || '',
+            phoneNumber: phone || '',
+            email: email || '',
+            gender: gender || '男',
+            birthday: birthday || '2021-01-01',
+            headportrait: headportrait || '../assets/image/head1'
+          })
+          // sessionStorage.setItem('username', username || '')
+          // sessionStorage.setItem('phoneNumber', phone || '')
+          // sessionStorage.setItem('email', email || '')
+          // sessionStorage.setItem('gender', gender || '男')
+          // sessionStorage.setItem('birthday', birthday || '2021-01-01')
+          // sessionStorage.setItem('headportrait', headportrait || '../assets/image/head1')
         }
       })
     }
@@ -477,11 +473,11 @@ export default defineComponent({
       }).then(({data:{code, token, userid}}) => {
         // console.log(code, token);
         if(code === 3200) {
-          sessionStorage.setItem('_TOKEN', token)
-          sessionStorage.setItem('userid', userid)
-          dialogVisible.value = false
+          Utils.update('token', token)
+          // dialogVisible.value = false
+          Utils.update('dialogVisible', false)
           ElMessage.success('success')
-          context.emit('getStatus', false)
+          context.emit('getStatus', true)
           _getUserInfo()
         }else {
           ElMessage.warning('登录失败，请检查账号密码是否正确!')
@@ -497,11 +493,11 @@ export default defineComponent({
         vercode: form.confirmSMS
       }).then(({data: {code, token, userid}}) => {
         if(code === 3200) {
-          sessionStorage.setItem('_TOKEN', token)
-          sessionStorage.setItem('userid', userid)
-          dialogVisible.value = false
+          Utils.update('token', token)
+          // dialogVisible.value = false
+          Utils.update('dialogVisible', false)
           ElMessage.success('success')
-          context.emit('getStatus', false)
+          context.emit('getStatus', true)
           _getUserInfo()
         } else{
           ElMessage.warning('登录失败，请检查账号验证码是否正确!')
@@ -511,7 +507,7 @@ export default defineComponent({
 
     const login = () => {
       // console.log(loginType);
-      sessionStorage.setItem('phone', loginForm.phoneNumber)
+      localStorage.setItem('phone', loginForm.phoneNumber)
       if(loginType.value === tabName[0]){
         _loginByPassword(loginForm)
       }else {
@@ -561,7 +557,7 @@ export default defineComponent({
       getConfirmTime();
     });
     return {
-      dialogVisible,
+      // dialogVisible,
       loginForm,
       ruleForm,
       rotate,
@@ -609,6 +605,11 @@ a:hover {
   align-items: center;
   // position: relative;
   // overflow: hidden;
+}
+
+.dialog-dark {
+  --el-color-white: black;
+  --el-text-color-primary: white;
 }
 
 .flex {
