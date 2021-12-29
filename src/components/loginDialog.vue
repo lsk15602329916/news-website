@@ -353,7 +353,7 @@ export default defineComponent({
     const carousel2 = ref();
     const isAgree = ref(false)
     const loginForm = reactive({
-      phoneNumber: sessionStorage.getItem('phone') || '',
+      phoneNumber: localStorage.getItem('phone') || '',
       password: '',
       confirmSMS: ''
     })
@@ -411,12 +411,20 @@ export default defineComponent({
     const _getUserInfo = () => {
       getUserInfo().then(({code, data:{username, phone, email, gender, birthday, headportrait}}) => { 
         if(code === 3200) {
-          sessionStorage.setItem('username', username || '')
-          sessionStorage.setItem('phoneNumber', phone || '')
-          sessionStorage.setItem('email', email || '')
-          sessionStorage.setItem('gender', gender || '男')
-          sessionStorage.setItem('birthday', birthday || '2021-01-01')
-          sessionStorage.setItem('headportrait', headportrait || '../assets/image/head1')
+          Utils.update('user', {
+            username: username || '',
+            phoneNumber: phone || '',
+            email: email || '',
+            gender: gender || '男',
+            birthday: birthday || '2021-01-01',
+            headportrait: headportrait || '../assets/image/head1'
+          })
+          // sessionStorage.setItem('username', username || '')
+          // sessionStorage.setItem('phoneNumber', phone || '')
+          // sessionStorage.setItem('email', email || '')
+          // sessionStorage.setItem('gender', gender || '男')
+          // sessionStorage.setItem('birthday', birthday || '2021-01-01')
+          // sessionStorage.setItem('headportrait', headportrait || '../assets/image/head1')
         }
       })
     }
@@ -462,7 +470,7 @@ export default defineComponent({
       }).then(({data:{code, token}}) => {
         // console.log(code, token);
         if(code === 3200) {
-          sessionStorage.setItem('_TOKEN', token)
+          Utils.update('token', token)
           // dialogVisible.value = false
           Utils.update('dialogVisible', false)
           ElMessage.success('success')
@@ -482,7 +490,7 @@ export default defineComponent({
         vercode: form.confirmSMS
       }).then(({data: {code, token}}) => {
         if(code === 3200) {
-          sessionStorage.setItem('_TOKEN', token)
+          Utils.update('token', token)
           // dialogVisible.value = false
           Utils.update('dialogVisible', false)
           ElMessage.success('success')
@@ -496,7 +504,7 @@ export default defineComponent({
 
     const login = () => {
       // console.log(loginType);
-      sessionStorage.setItem('phone', loginForm.phoneNumber)
+      localStorage.setItem('phone', loginForm.phoneNumber)
       if(loginType.value === tabName[0]){
         _loginByPassword(loginForm)
       }else {

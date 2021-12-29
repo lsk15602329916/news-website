@@ -217,6 +217,7 @@ export default {
     let news = ref([])
     let isFirstShow = ref(true)
     let isAllFirstShow = ref(true)
+    let isMYCommentFirstShow = ref(true)
     const win = ref(null)
     let show = ref(false)
     let newsTime = ref('')
@@ -306,31 +307,32 @@ export default {
 
     const handleGetAllComments = async (fn, comments, offset, count) => {
       await fn(comments, offset, count)
+      allComments.value = comments.value
     }
 
     const showAllComments = async (flag) => {
       show.value = true
       // 第一次获取
       if(!curTTCommentCount.value) {
-        await handleGetAllComments(_getComments, allMYComments, curMYCommentCount, 10)
         await handleGetAllComments(_getNewsComments, allTTComments, curTTCommentCount, 10)
-        allComments.value = allTTComments.value
         return
       }
-      console.log(flag);
+      
       if(!flag) {
         if(curAllComment.value) {
           await handleGetAllComments(_getComments, allMYComments, curMYCommentCount, 10)
-          allComments.value = allMYComments.value
         } else {
           await handleGetAllComments(_getNewsComments, allTTComments, curTTCommentCount, 10)
-          allComments.value = allTTComments.value
         }
       }
     }
 
-    const changeAllComment = (toggle, i) => {
+    const changeAllComment = async (toggle, i) => {
       if(isAllFirstShow.value) isAllFirstShow.value = false
+      if(isMYCommentFirstShow.value) {
+        await handleGetAllComments(_getComments, allMYComments, curMYCommentCount, 10)
+        isMYCommentFirstShow.value = false
+      }
       curAllComment.value = i
       allComments.value = i ? allMYComments.value : allTTComments.value
       toggle()
@@ -351,11 +353,16 @@ export default {
     }
 
     const like = async () => {
-      await likeNews(route.params.item_id).then(res => {
-        newsDetails.value.data.like = Boolean(res.data)
-      }).catch(err => {
-        console.log(err);
-      })
+      if(!localStorage.getItem('_TOKEN')) {
+        Utils.update('dialogVisible', true)
+        return;
+      } else {
+        await likeNews(route.params.item_id).then(res => {
+          newsDetails.value.data.like = Boolean(res.data)
+        }).catch(err => {
+          console.log(err);
+        })
+      }
     }
 
     const toTop = () => {
@@ -378,6 +385,12 @@ export default {
       }
 
       window.addEventListener('scroll', Utils.debounce(scrollFn))
+
+      window.addEventListener('storage', (e) => {
+        if(e.key && e.key == '_TOKEN') {
+          Utils.update('loginStatus', Boolean(e.newValue))
+        }
+      })
     })
     
     _getNewsDetails()

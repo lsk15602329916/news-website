@@ -162,8 +162,8 @@ export default {
     // 退出登录
     logout() {
       // this.loginStatus = true
-      Utils.update('loginStatus', false)
-      sessionStorage.removeItem("_TOKEN")
+      Utils.update(['loginStatus', 'token'], [false, ''])
+      localStorage.removeItem("_TOKEN")
     },
     toggle(e) {
       console.log("e: ", e);
@@ -193,9 +193,16 @@ export default {
   mounted() {
     // console.log("mounted", this);
     this.$vuetify.theme.themes.light.primary = "red";
-    if(sessionStorage.getItem('_TOKEN')) {
-      this.loginStatus = false
+    if(localStorage.getItem('_TOKEN')) {
+      // this.loginStatus = true
+      Utils.update('loginStatus', true)
     }
+    window.addEventListener('storage', (e) => {
+      console.log(e);
+      if(e.key && e.key == '_TOKEN') {
+        Utils.update('loginStatus', Boolean(e.newValue))
+      }
+    })
   },
   computed: {
     theme() {

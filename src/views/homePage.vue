@@ -88,10 +88,10 @@ export default {
   setup() {
     const formMessage = reactive({
       head: head1,
-      name: sessionStorage.getItem("username"),
-      phoneNumber: sessionStorage.getItem("phoneNumber"),
-      sex: sessionStorage.getItem("gender"),
-      birth: sessionStorage.getItem("birthday")
+      name: localStorage.getItem("username"),
+      phoneNumber: localStorage.getItem("phoneNumber"),
+      sex: localStorage.getItem("gender"),
+      birth: localStorage.getItem("birthday")
     })
     const formRules = {
       phoneNumber: [

@@ -57,7 +57,6 @@ export default {
     }
 
     const toLogin = () => {
-      console.log(111);
       Utils.update('dialogVisible', true)
     }
 

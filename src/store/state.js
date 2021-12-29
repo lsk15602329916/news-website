@@ -9,7 +9,7 @@ export default {
   }, 
 
   dialogVisible: false,
-  loginStatus: sessionStorage.getItem('_TOKEN'),
+  loginStatus: localStorage.getItem('_TOKEN'),
 
   theme: localStorage.getItem('theme') || 'light'
 }
