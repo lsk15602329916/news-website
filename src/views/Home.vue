@@ -150,6 +150,8 @@ export default {
     logout() {
       this.loginStatus = true
       sessionStorage.removeItem("_TOKEN")
+      sessionStorage.removeItem("userid")
+
     },
     toggle(e) {
       console.log("e: ", e);

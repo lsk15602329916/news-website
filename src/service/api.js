@@ -113,3 +113,31 @@ export async function getUserInfo(params) {
         params
     })
 }
+
+// 修改个人信息
+export async function uploadUserInfo(data) {
+    return request({
+        url: OPT.UPLOADUSERINFO,
+        method: 'POST',
+        data,
+        headers: {
+            'content-type': 'application/json'
+        }
+    })
+}
+
+// 获取点赞列表
+export async function getLikeList(params) {
+    return request({
+        url: OPT.GETLIKELIST,
+        params
+    })
+}
+
+// 获取点赞列表
+export async function getHistory(params) {
+    return request({
+        url: OPT.GETHISTORY,
+        params
+    })
+}

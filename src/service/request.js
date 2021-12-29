@@ -24,15 +24,15 @@ export default function request(config) {
     instance.interceptors.response.use(
         response => {
             //拦截响应，做统一处理
+            Utils.update('loading', false)
             if (response.data.code === 401) {
                 sessionStorage.removeItem('_TOKEN')
-                return response.data
-            } else {
-                return response.data
             }
+            return response.data
         },
         //接口错误状态处理，也就是说无响应时的处理
         error => {
+            Utils.update('loading', false)
             return Promise.reject(error) // 返回接口返回的错误信息
         })
 

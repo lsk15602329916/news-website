@@ -20,3 +20,12 @@ export const LOGINBYVERCODE = '/loginByVercode'
 
 // 获取个人信息
 export const GETUSERINFO = '/getSpaceInfo'
+
+// 修改用户信息
+export const UPLOADUSERINFO = '/modifySpaceInfo'
+
+// 获取点赞列表
+export const GETLIKELIST = '/getLikeList'
+
+// 获取历史记录
+export const GETHISTORY = '/getHistory'

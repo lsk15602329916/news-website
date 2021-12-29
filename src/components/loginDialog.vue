@@ -60,6 +60,7 @@
                     <el-input
                       v-model="loginForm.password"
                       placeholder="请输入密码"
+                      show-password
                       type="password"
                     ></el-input>
                   </el-form-item>
@@ -349,6 +350,8 @@ import {
 import { ElMessageBox } from "element-plus";
 import { sendSMS, register, loginByPassword, loginByVercode, getUserInfo } from "@/service/api";
 import { ElMessage } from 'element-plus'
+import head1 from '@/assets/image/head1.png'
+
 // import MyInput from './input.vue'
 
 export default defineComponent({
@@ -428,7 +431,7 @@ export default defineComponent({
           sessionStorage.setItem('email', email || '')
           sessionStorage.setItem('gender', gender || '男')
           sessionStorage.setItem('birthday', birthday || '2021-01-01')
-          sessionStorage.setItem('headportrait', headportrait || '../assets/image/head1')
+          sessionStorage.setItem('headportrait', headportrait || head1)
         }
       })
     }
@@ -471,10 +474,11 @@ export default defineComponent({
       loginByPassword({
         phone: form.phoneNumber,
         password: form.password
-      }).then(({data:{code, token}}) => {
+      }).then(({data:{code, token, userid}}) => {
         // console.log(code, token);
         if(code === 3200) {
           sessionStorage.setItem('_TOKEN', token)
+          sessionStorage.setItem('userid', userid)
           dialogVisible.value = false
           ElMessage.success('success')
           context.emit('getStatus', false)
@@ -491,9 +495,10 @@ export default defineComponent({
       loginByVercode({
         phone: form.phoneNumber,
         vercode: form.confirmSMS
-      }).then(({data: {code, token}}) => {
+      }).then(({data: {code, token, userid}}) => {
         if(code === 3200) {
           sessionStorage.setItem('_TOKEN', token)
+          sessionStorage.setItem('userid', userid)
           dialogVisible.value = false
           ElMessage.success('success')
           context.emit('getStatus', false)
