@@ -113,7 +113,7 @@
     v-model="show"
     temporary
     disable-resize-watcher
-    width="400"
+    width="500"
     app
     :theme="$store.state.theme"
   >
