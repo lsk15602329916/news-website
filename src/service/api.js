@@ -26,6 +26,19 @@ export async function getNewsComments(params) {
     })
 }
 
+export async function likeNews(item_id) {
+    return request({
+        url: OPT.LIKENEWS,
+        method: 'POST',
+        data: {
+          item_id
+        },
+        headers: {
+          'content-type': 'application/json'
+        },
+    })
+}
+
 // 获取验证码
 export async function sendSMS(phoneNumber) {
     return request({

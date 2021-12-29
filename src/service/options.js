@@ -1,6 +1,7 @@
 export const GETNEWS = '/getNews'
 export const GETNEWSDETAILS = '/getNewsDetails'
 export const GETNEWSCOMMENTS = '/getNewsComments'
+export const LIKENEWS = '/likeNews'
 
 // 获取验证码
 export const SENDSMS = '/verifyPhone'

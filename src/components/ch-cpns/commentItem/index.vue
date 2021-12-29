@@ -69,6 +69,7 @@ import { useStore } from 'vuex';
 import textInput from './textInput';
 import secondCommentItem from './secondCommentItem';
 import { favComment } from '@/service/api';
+import Utils from '@/utils';
 export default {
   props: {
     comment: {
@@ -92,10 +93,14 @@ export default {
 
     const fav = async () => {
       await favComment({
-        user_id: store.state.user.id,
+        // user_id: store.state.user.id,
         comment_id: props.comment._id
       }).then(res => {
-        context.emit('update-fav', res.data)
+        if(res.code === 401 || res.data === null) {
+          Utils.showErrorAlert('请先登录')
+        } else {
+          context.emit('update-fav', res.data)
+        }
       }).catch(err => {
         console.log(err);
       })

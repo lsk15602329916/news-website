@@ -78,10 +78,14 @@ export default {
     let show = ref(false)
     const fav = async () => {
       await favComment({
-        user_id: store.state.user.id,
+        // user_id: store.state.user.id,
         comment_id: props.comment._id
       }).then(res => {
-        context.emit('update-second-fav', res.data)
+        if(res.code === 401 || res.data === null) {
+          Utils.showErrorAlert('请先登录')
+        } else {
+          context.emit('update-second-fav', res.data)
+        }
       }).catch(err => {
         console.log(err);
       })

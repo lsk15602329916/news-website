@@ -7,7 +7,7 @@
           v-model="commentContent"
           rows="5"
         ></textarea>
-        <v-overlay v-if="overlay" :model-value="hover" @click="toLogin" contained class="align-center justify-center cursor white--text">
+        <v-overlay v-if="!$store.state.loginStatus" :model-value="hover" @click="toLogin" contained class="align-center justify-center cursor white--text">
           登录后才能评论，去登录
         </v-overlay>
       </v-card>
@@ -17,7 +17,7 @@
       class="btn align-self-end ml-3" 
       color="blue-grey" 
       size="small"
-      :disabled="overlay || !commentContent"
+      :disabled="!$store.state.loginStatus || !commentContent"
       @click="sendComment"
     >发送</v-btn>
   </div>
@@ -28,6 +28,7 @@ import { computed, ref } from '@vue/reactivity'
 import { comment } from '@/service/api';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
+import Utils from '@/utils';
 export default {
   props: {
     belong_comment: [String, Number],
@@ -35,13 +36,13 @@ export default {
   },
   setup(props, context) {
     let commentContent = ref('')
-    let overlay = computed(() => !store.state.user.id)
     const store = useStore()
+    // let overlay = computed(() => store.state.)
     const route = useRoute()
 
     const sendComment = async () => {
       let o = {
-        user_id: store.state.user.id,
+        // user_id: store.state.user.id,
         item_id: route.params.item_id,
         reply_to: props.replyTo?.toString(),
         belong_comment: props.belong_comment || props.replyTo,
@@ -56,14 +57,15 @@ export default {
     }
 
     const toLogin = () => {
-      console.log('登录');
+      console.log(111);
+      Utils.update('dialogVisible', true)
     }
 
     return {
       commentContent,
       sendComment,
       toLogin,
-      overlay
+      // overlay
     }
   }
 }
