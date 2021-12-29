@@ -19,7 +19,7 @@
           <v-item-group class="d-flex" mandatory>
             <v-item v-slot="{ isSelected, toggle }">
               <v-card
-                :color="isSelected || isFirstShow ? 'orange' : ''"
+                :color="(isSelected || isFirstShow) && !showMYComment ? 'orange' : ''"
                 class="d-flex align-center px-2"
                 flat
                 dark
@@ -37,7 +37,7 @@
             <v-divider vertical class="mx-1" :theme="$store.state.theme"></v-divider>
             <v-item v-slot="{ isSelected, toggle }">
               <v-card
-                :color="isSelected ? 'orange' : ''"
+                :color="isSelected || showMYComment ? 'orange' : ''"
                 class="d-flex align-center px-2"
                 flat
                 dark
@@ -220,6 +220,7 @@ export default {
     let isMYCommentFirstShow = ref(true)
     const win = ref(null)
     let show = ref(false)
+    let showMYComment = ref(false)
     let newsTime = ref('')
 
     const _getNewsDetails = async () => {
@@ -282,11 +283,13 @@ export default {
     }
 
     const updateComment = async () => {
+      showMYComment.value = true
       await _getComments(newsComments)
     }
 
     const changeComment = async (toggle, i) => {
       if(isFirstShow.value) isFirstShow.value = false
+      showMYComment.value = false
       toggle()
       if(i) {
         await _getComments(newsComments)
@@ -416,7 +419,8 @@ export default {
       show,
       allComments,
       like,
-      toTop
+      toTop,
+      showMYComment
     };
   },
 };

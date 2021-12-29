@@ -12,6 +12,7 @@
       </v-avatar>
       <span class="ml-2">{{ comment.user.name }}</span>
       <v-spacer></v-spacer>
+      <div class="text-caption mt-1 mr-3">{{ comment.createdAt?.slice(0, 19).split('T').join(' ') }}</div>
       <span class="pt-1 ml-2">{{ comment.favCount || 0 }}</span>
       <v-btn
         size="x-small"

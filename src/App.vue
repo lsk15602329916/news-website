@@ -26,10 +26,10 @@ export default {
     }
     const store = useStore()
 
-    watch(() => store.state.user, (newVal) => {
-      if(newVal.phoneNumber) {
+    watch(() => store.state.user, ({username, phoneNumber, email, gender, birthday, headportrait }) => {
+      if(phoneNumber) {
         localStorage.setItem('username', username || '')
-        localStorage.setItem('phoneNumber', phone || '')
+        localStorage.setItem('phoneNumber', phoneNumber || '')
         localStorage.setItem('email', email || '')
         localStorage.setItem('gender', gender || '男')
         localStorage.setItem('birthday', birthday || '2021-01-01')
